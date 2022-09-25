@@ -1,70 +1,76 @@
-﻿using System;
-using Newtonsoft.Json;
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
-//using Discord.Commands;
 using Discord.WebSocket;
-using Discord.Net;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace XaiSharp
 {
+    public class Config
+    {
+        public ulong BotOwnerId { get; set; }
+        public string Token { get; set; }
+        public ulong ClientId { get; set; }
+        public ulong GuildId { get; set; }
+        public ulong WebhookId { get; set; }
+        public string WebhookToken { get; set; }
+        public string SqlUser { get; set; }
+        public string SqlPass { get; set; }
+        public string SqlDb { get; set; }
+        public string ActivityType { get; set; }
+        public string Activity { get; set; }
+    }
     public class Program
     {
-        public class Config
-        {
-            public string Token { get; set; }
-            public ulong GuildId { get; set; }
-        }
-        private DiscordSocketClient? _client;
-
-        Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
-        public static Task Main(string[] args) => new Program().MainAsync();
+        Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+        public static Task Main() => new Program().MainAsync();
 
         public async Task MainAsync()
         {
-            _client = new DiscordSocketClient();
-            _client.Log += Log;
-            _client.Ready += Client_Ready;
-            _client.SlashCommandExecuted += SlashCommandHandler;
+            
+            using IHost host = Host.CreateDefaultBuilder()
+                .ConfigureServices((_, services) =>
+                services
+                .AddSingleton(x => new DiscordSocketClient(new DiscordSocketConfig
+                {
+                    GatewayIntents = GatewayIntents.AllUnprivileged,
+                    AlwaysDownloadUsers = true
+                }))
+                .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+                .AddSingleton<InteractionHandler>()
+                )
+                .Build();
 
-            //Login and start the bot
-            await _client.LoginAsync(TokenType.Bot, config.Token);
+            await RunAsync(host);
+        }
+
+        public async Task RunAsync(IHost host)
+        {
+            using IServiceScope serviceScope = host.Services.CreateScope();
+            IServiceProvider provider = serviceScope.ServiceProvider;
+
+            var _client = provider.GetRequiredService<DiscordSocketClient>();
+            var slashCommmands = provider.GetRequiredService<InteractionService>();
+            await provider.GetRequiredService<InteractionHandler>().InitializeAsync();
+
+
+            _client.Log += async (LogMessage msg) => { Console.WriteLine(msg.Message); };
+            slashCommmands.Log += async (LogMessage msg) => { Console.WriteLine(msg.Message); };
+
+            _client.Ready += async () =>
+            {
+                // Confirm that the bot is ready
+                Console.WriteLine("Ready!");
+                await slashCommmands.RegisterCommandsGloballyAsync();
+            };
+
+            await _client.LoginAsync(TokenType.Bot, _config.Token);
             await _client.StartAsync();
+            await _client.SetGameAsync("you", "", ActivityType.Watching);
 
             await Task.Delay(-1);
-        }
 
-        public async Task Client_Ready()
-        {
-            var guild = _client.GetGuild(config.GuildId);
-            //command
-            var guildCommand = new SlashCommandBuilder()
-                .WithName("ping")
-                .WithDescription("pong")
-                .AddOption("text", ApplicationCommandOptionType.String, "text to say", isRequired: true);
-
-            //create commands
-            try
-            {
-                await guild.CreateApplicationCommandAsync(guildCommand.Build());
-            }
-            catch (HttpException exception)
-            {
-                var json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
-                //log the error
-                Console.WriteLine(json);
-            }
-        }
-
-        private async Task SlashCommandHandler(SocketSlashCommand command)
-        {
-            await command.RespondAsync($"🏓 {command.User.Mention} {command.Data.Options.First().Value}");
-        }
-
-        private Task Log(LogMessage msg)
-        {
-            Console.WriteLine(msg.ToString());
-            return Task.CompletedTask;
         }
     }
 }
