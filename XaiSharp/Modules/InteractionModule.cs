@@ -73,7 +73,7 @@ namespace XaiSharp.Modules
         {
             Random random = new();
             var responses = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText("JSON/8ball.json")).ToArray();
-            var EightBallEmbed = new EmbedBuilder()
+            var eightBallEmbed = new EmbedBuilder()
                 .WithColor(0x000000)
                 .WithTitle("Magic 8-ball")
                 .WithThumbnailUrl("https://cdn.discordapp.com/attachments/857415925324840960/1023778034936979456/unknown.png")
@@ -82,8 +82,21 @@ namespace XaiSharp.Modules
             if (question.Length > 256)
                 await RespondAsync("Your question is too long.", ephemeral: true);
             else
-                await RespondAsync(embed: EightBallEmbed.Build());
+                await RespondAsync(embed: eightBallEmbed.Build());
 
+        }
+
+        [SlashCommand("credit","What is your Progress Credit™?")]
+        public async Task HandleCreditCommand()
+        {
+            Random random = new();
+            var image = $"https://zai-tm.github.io/credit/{random.Next(0, 9)}.png";
+            var creditEmbed = new EmbedBuilder()
+                .WithTitle("Progress Credit™")
+                .WithImageUrl(image)
+                .WithCurrentTimestamp();
+
+            await RespondAsync(embed: creditEmbed.Build());
         }
     }
 }
