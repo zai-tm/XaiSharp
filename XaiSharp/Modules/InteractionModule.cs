@@ -37,7 +37,10 @@ namespace XaiSharp.Modules
             var roll = random.Next(1,6);
             if (sides != null)
             {
-                roll = random.Next(1, sides.Value);
+                if (sides >= 0)
+                    await RespondAsync("You cannot enter 0 or a negative number!", ephemeral: true);
+                else
+                    roll = random.Next(1, sides.Value);
             }
 
             var diceEmbed = new EmbedBuilder()
@@ -63,6 +66,24 @@ namespace XaiSharp.Modules
                 .WithFooter("Inspirational quotes provided by the Progressbar95 community")
                 .WithCurrentTimestamp();
             await RespondAsync(embed: quoteEmbed.Build());
+        }
+
+        [SlashCommand("8-ball", "Ask the magic 8-ball a question")]
+        public async Task HandleEightBallCommand(string question)
+        {
+            Random random = new();
+            var responses = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText("JSON/8ball.json")).ToArray();
+            var EightBallEmbed = new EmbedBuilder()
+                .WithColor(0x000000)
+                .WithTitle("Magic 8-ball")
+                .WithThumbnailUrl("https://cdn.discordapp.com/attachments/857415925324840960/1023778034936979456/unknown.png")
+                .AddField("You asked:", question)
+                .AddField("The 8-ball says", responses[random.Next(0, responses.Length)]);
+            if (question.Length > 256)
+                await RespondAsync("Your question is too long.", ephemeral: true);
+            else
+                await RespondAsync(embed: EightBallEmbed.Build());
+
         }
     }
 }
