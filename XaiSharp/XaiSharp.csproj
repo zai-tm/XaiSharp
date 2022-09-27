@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Remove="config.json" />
     <None Remove="JSON\8ball.json" />
+    <None Remove="JSON\death.json" />
     <None Remove="JSON\quotes.json" />
   </ItemGroup>
 
@@ -38,6 +39,12 @@
 
   <ItemGroup>
     <Content Include="JSON\quotes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="JSON\death.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

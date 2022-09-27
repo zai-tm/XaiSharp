@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.Webhook;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,22 @@ namespace XaiSharp.Modules
 {
     public class InteractionModule : InteractionModuleBase<SocketInteractionContext>
     {
+        Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
         public class Quote
         {
-            public string Text;
-            public string Author;
-            public string? Image;
+            public string Text { get; set; }
+            public string Author { get; set; }
+            public string? Image { get; set; }
         }
 
+        public class DeathMessage
+        {
+            public List<string> Message { get; set; }
+        }
+
+        //----------------//
+        // SLASH COMMANDS //
+        //----------------//
         [SlashCommand("crash", "Crash the bot... maybe")]
         public async Task HandleCrashCommand()
         {
@@ -34,7 +44,7 @@ namespace XaiSharp.Modules
         public async Task HandleDiceCommand(int? sides = null)
         {
             Random random = new();
-            var roll = random.Next(1,6);
+            var roll = random.Next(1, 6);
             if (sides != null)
             {
                 if (sides >= 0)
@@ -86,7 +96,7 @@ namespace XaiSharp.Modules
 
         }
 
-        [SlashCommand("credit","What is your Progress Credit™?")]
+        [SlashCommand("credit", "What is your Progress Credit™?")]
         public async Task HandleCreditCommand()
         {
             Random random = new();
@@ -97,6 +107,72 @@ namespace XaiSharp.Modules
                 .WithCurrentTimestamp();
 
             await RespondAsync(embed: creditEmbed.Build());
+        }
+
+        [SlashCommand("suggest", "Suggest a feature")]
+        public async Task HandleSuggestCommand(string suggestion)
+        {
+            DiscordWebhookClient webhook = new(_config.WebhookId, _config.WebhookToken);
+            if (suggestion.Length > 2000)
+            {
+                await RespondAsync("Your suggestion is too long.", ephemeral: true);
+            } else
+            {
+                await RespondAsync("Your suggestion has been sent.", ephemeral: true);
+                await webhook.SendMessageAsync(suggestion, false, null, Context.User.Username, Context.User.GetAvatarUrl());
+            }
+            //await RespondAsync("not implemented yet",ephemeral: true);
+        }
+        
+
+        //---------------//
+        // USER COMMANDS //
+        //---------------//
+
+        [UserCommand("Kill")]
+        public async Task HandleKillThisUserCommand(IUser user)
+        {
+            Random random = new();
+            List<DeathMessage> messages = JsonConvert.DeserializeObject<List<DeathMessage>>(File.ReadAllText("JSON/death.json"));
+            var messagesArr = messages.ToArray();
+            //Console.WriteLine(messages);
+            var deathMessageEmbed = new EmbedBuilder()
+                .WithTitle("You Died!")
+                .WithColor(0x910700);;
+            if (random.Next(0,1) == 0)
+            {
+                deathMessageEmbed.Description = $"{user.Mention} {messagesArr[0].Message.ToArray()[random.Next(0, messagesArr[0].Message.Count)]} {Context.User.Mention}";
+            }
+            else
+            {
+                deathMessageEmbed.Description = $"{user.Mention} {messagesArr[1].Message.ToArray()[random.Next(0, messagesArr[1].Message.Count)]}";
+            }
+            await RespondAsync(embed: deathMessageEmbed.Build());
+        }
+
+        //------------------//
+        // MESSAGE COMMANDS //
+        //------------------//
+        [MessageCommand("Suggest as quote")]
+        public async Task HandleSuggestAsQuoteCommand(IMessage message)
+        {
+            DiscordWebhookClient webhook = new(_config.WebhookId, _config.WebhookToken);
+
+
+
+            var suggestQuoteEmbed = new EmbedBuilder()
+                .WithAuthor(message.Author.Username, message.Author.GetAvatarUrl())
+                .WithDescription(message.Content)
+                .WithFooter($"Submitted by {Context.User.Username}", Context.User.GetAvatarUrl())
+                .WithCurrentTimestamp();
+            //Console.WriteLine(suggestQuoteEmbed.ToString());
+
+            if (message.Attachments.Count != 0)
+            {
+                suggestQuoteEmbed.ImageUrl = message.Attachments.FirstOrDefault().Url;
+            } 
+            await webhook.SendMessageAsync(String.Empty, false, embeds: new[] { suggestQuoteEmbed.Build() }, "Quote suggestion");
+            await RespondAsync("Your quote suggestion was sent.", ephemeral: true);
         }
     }
 }
