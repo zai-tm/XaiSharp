@@ -1,0 +1,1 @@
+CREATE TABLE `tags` (`name` TEXT NOT NULL , `content` TEXT NOT NULL , `userid` BIGINT NOT NULL ) ENGINE = InnoDB; 

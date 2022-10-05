@@ -61,13 +61,22 @@ namespace XaiSharp
             _client.Ready += async () =>
             {
                 // Confirm that the bot is ready
-                Console.WriteLine("Ready!");
+                Console.WriteLine($"Logged in as {_client.CurrentUser.Username}#{_client.CurrentUser.Discriminator} ({_client.CurrentUser.Id})");
                 await slashCommmands.RegisterCommandsGloballyAsync();
             };
 
             await _client.LoginAsync(TokenType.Bot, _config.Token);
             await _client.StartAsync();
-            await _client.SetGameAsync("you", "", ActivityType.Watching);
+            var at = _config.ActivityType switch
+            {
+                "PLAYING" => ActivityType.Playing,
+                "WATCHING" => ActivityType.Watching,
+                "STREAMING" => ActivityType.Streaming,
+                "COMPETING" => ActivityType.Competing,
+                "LISTENING" => ActivityType.Listening,
+                _ => ActivityType.CustomStatus,
+            };
+            await _client.SetGameAsync(_config.Activity, "", at);
 
             await Task.Delay(-1);
 
