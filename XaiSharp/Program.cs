@@ -67,16 +67,17 @@ namespace XaiSharp
 
             await _client.LoginAsync(TokenType.Bot, _config.Token);
             await _client.StartAsync();
-            var at = _config.ActivityType switch
+            ActivityType at = _config.ActivityType.ToLower() switch
             {
-                "PLAYING" => ActivityType.Playing,
-                "WATCHING" => ActivityType.Watching,
-                "STREAMING" => ActivityType.Streaming,
-                "COMPETING" => ActivityType.Competing,
-                "LISTENING" => ActivityType.Listening,
-                _ => ActivityType.CustomStatus,
+                "playing" => ActivityType.Playing,
+                "watching" => ActivityType.Watching,
+                "streaming" => ActivityType.Streaming,
+                "competing" => ActivityType.Competing,
+                "listening" => ActivityType.Listening,
+                _ => ActivityType.Playing,
             };
-            await _client.SetGameAsync(_config.Activity, "", at);
+            
+            await _client.SetActivityAsync(new Game(_config.Activity, at, 0));
 
             await Task.Delay(-1);
 
