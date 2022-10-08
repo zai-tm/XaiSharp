@@ -1,15 +1,13 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Discord.WebSocket;
 using Discord.Webhook;
 using Newtonsoft.Json;
-using MySql;
 
 namespace XaiSharp.Modules
 {
     public class InteractionModule : InteractionModuleBase<SocketInteractionContext>
     {
-        Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+        public Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
         public class Quote
         {
             public string Text { get; set; }
@@ -21,16 +19,6 @@ namespace XaiSharp.Modules
         {
             public List<string> Message { get; set; }
         }
-
-        public class ProgressbarGame
-        {
-            public IUser Player { get; set; }
-            public string Segment { get; set; }
-            public int Percentage { get; set; }
-            public int Yellow { get; set; }
-        }
-
-        List<ProgressbarGame> Games = new();
 
 
         //----------------//
