@@ -20,8 +20,8 @@ namespace XaiSharp.Commands.User
             //Console.WriteLine(messages);
             var deathMessageEmbed = new EmbedBuilder()
                 .WithTitle("You Died!")
-                .WithColor(0x910700); ;
-            if (random.Next(0, 1) == 0)
+                .WithColor(0x910700);
+            if (random.Next(0, 2) == 0)
             {
                 deathMessageEmbed.Description = $"{user.Mention} {messagesArr[0].Message.ToArray()[random.Next(0, messagesArr[0].Message.Count)]} {Context.User.Mention}";
             }
