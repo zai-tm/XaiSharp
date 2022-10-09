@@ -24,7 +24,7 @@ namespace XaiSharp.Commands.Slash
             var quoteEmbed = new EmbedBuilder()
                 .WithColor((uint)Math.Floor(random.NextDouble() * (0xffffff + 1)))
                 .WithAuthor(quotes[quote].Author)
-                .WithDescription($"{quotes[quote].Text.Replace("\\n", "\n")}\n\n[Suggest a quote](https://forms.gle/BAZ2rzgYcaDXf9tR7)")
+                .WithDescription(quotes[quote].Text.Replace("\\n", "\n"))
                 .WithImageUrl(quotes[quote].Image)
                 .WithFooter("Inspirational quotes provided by the Progressbar95 community")
                 .WithCurrentTimestamp();
