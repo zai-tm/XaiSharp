@@ -22,10 +22,15 @@ namespace XaiSharp.Commands.Message
                 .WithCurrentTimestamp();
             //Console.WriteLine(suggestQuoteEmbed.ToString());
 
-            if (message.Attachments.Count != 0)
+            if (message.Attachments.Count != 0 )
             {
                 suggestQuoteEmbed.ImageUrl = message.Attachments.FirstOrDefault().Url;
             }
+            if (message.Embeds.Count != 0)
+            {
+                suggestQuoteEmbed.Description += $"\n{message.Embeds?.FirstOrDefault()?.Author}\n{message.Embeds?.FirstOrDefault()?.Title}\n{message.Embeds?.FirstOrDefault()?.Description}\n{message.Embeds?.FirstOrDefault()?.Footer}";
+            }
+
             await webhook.SendMessageAsync(String.Empty, false, embeds: new[] { suggestQuoteEmbed.Build() }, "Quote suggestion");
             await RespondAsync("Your quote suggestion was sent.", ephemeral: true);
         }
