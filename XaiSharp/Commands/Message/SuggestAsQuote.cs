@@ -30,6 +30,7 @@ namespace XaiSharp.Commands.Message
             {
                 suggestQuoteEmbed.Description += $"\n{message.Embeds?.FirstOrDefault()?.Author}\n{message.Embeds?.FirstOrDefault()?.Title}\n{message.Embeds?.FirstOrDefault()?.Description}\n{message.Embeds?.FirstOrDefault()?.Footer}";
             }
+            suggestQuoteEmbed.AddField("JSON", $"```json\n{{\n    \"Text\": \"{suggestQuoteEmbed.Description.Replace("\n", "\\\\n")}\",\n    \"Author\": \"{suggestQuoteEmbed.Author.Name}\"\n}}```", false);
 
             await webhook.SendMessageAsync(String.Empty, false, embeds: new[] { suggestQuoteEmbed.Build() }, "Quote suggestion");
             await RespondAsync("Your quote suggestion was sent.", ephemeral: true);
