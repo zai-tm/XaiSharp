@@ -34,7 +34,7 @@ namespace XaiSharp
                 services
                 .AddSingleton(x => new DiscordSocketClient(new DiscordSocketConfig
                 {
-                    GatewayIntents = GatewayIntents.AllUnprivileged,
+                    GatewayIntents = GatewayIntents.AllUnprivileged+0x2,
                     AlwaysDownloadUsers = true
                 }))
                 .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
