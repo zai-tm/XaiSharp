@@ -35,7 +35,8 @@ namespace XaiSharp.Commands.Slash
                             insertCmd.Parameters.Add(new("c", content.Substring(0, Math.Min(2000, content.Length))));
                             insertCmd.ExecuteNonQuery();
                             await RespondAsync($"Created tag **{name.Substring(0, Math.Min(50, name.Length))}**.");
-                        } catch (Exception ex)
+                        }
+                        catch (Exception ex)
                         {
                             await RespondAsync($"```{ex}```", ephemeral: true);
                         }
@@ -85,7 +86,8 @@ namespace XaiSharp.Commands.Slash
                         editCmd.Parameters.Add(new("@c", content.Substring(0, Math.Min(2000, content.Length))));
                         editCmd.ExecuteNonQuery();
                         await RespondAsync($"Successfully updated tag **{name}**.");
-                    } else
+                    }
+                    else
                     {
                         await RespondAsync("**No tag found!**", ephemeral: true);
                     }
@@ -174,11 +176,12 @@ namespace XaiSharp.Commands.Slash
                             infoEmbed.AddField("Author", $"{user.Mention} ({userid})", true);
                             infoEmbed.AddField("ID", $"{tag_id}", true);
                             Console.WriteLine(userid);
-                            await RespondAsync(embed:infoEmbed.Build());
+                            await RespondAsync(embed: infoEmbed.Build());
                         }
                         reader.Close();
 
-                    } else
+                    }
+                    else
                     {
                         await RespondAsync("**No tag found with that name!**", ephemeral: true);
                     }
@@ -186,7 +189,7 @@ namespace XaiSharp.Commands.Slash
                 }
                 catch (Exception ex)
                 {
-                    await RespondAsync("**No connection to database!**",ephemeral:true);
+                    await RespondAsync("**No connection to database!**", ephemeral: true);
                     Console.WriteLine(ex.ToString());
                 }
                 conn.Close();

@@ -32,6 +32,12 @@ namespace XaiSharp.Commands.Message
             }
             suggestQuoteEmbed.AddField("JSON", $"```json\n{{\n    \"Text\": \"{suggestQuoteEmbed.Description.Replace("\n", "\\\\n")}\",\n    \"Author\": \"{suggestQuoteEmbed.Author.Name}\"\n}}```", false);
 
+            if (message.Author == Context.User)
+            {
+                await RespondAsync("You cannot sumbit your own messages. Cry about it", ephemeral: true);
+                return;
+            }
+
             await webhook.SendMessageAsync(String.Empty, false, embeds: new[] { suggestQuoteEmbed.Build() }, "Quote suggestion");
             await RespondAsync("Your quote suggestion was sent.", ephemeral: true);
         }
