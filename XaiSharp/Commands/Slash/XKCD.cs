@@ -17,6 +17,9 @@ namespace XaiSharp.Commands.Slash
                 string result = await client.GetStringAsync(url);
                 dynamic data = JsonConvert.DeserializeObject(result);
                 string title = data.safe_title;
+                string year = data.year;
+                string month = data.month;
+                string day = data.day;
 
                 EmbedBuilder xkcdEmbed = new()
                 {
@@ -26,7 +29,7 @@ namespace XaiSharp.Commands.Slash
                     Color = Convert.ToUInt32(Util.CreateMD5Hash(title)[..6], 16),
                     Footer = new()
                     {
-                        Text = $"{data.alt} | {data.year}-{Util.PadInt(data.month, 2)}-{Util.PadInt(data.day, 2)}"
+                        Text = $"{data.alt} | {Util.CreateDateString(year, month, day)}"
                     }//,
                     //Timestamp = new DateTimeOffset(Convert.ToInt32(data.year), Convert.ToInt32(data.month), Convert.ToInt32(data.day), 0, 0, 0, new TimeSpan(0))
                 };
@@ -55,6 +58,9 @@ namespace XaiSharp.Commands.Slash
                 string result = await client.GetStringAsync(url);
                 dynamic data = JsonConvert.DeserializeObject(result);
                 string title = data.safe_title;
+                string year = data.year;
+                string month = data.month;
+                string day = data.day;
 
                 EmbedBuilder xkcdEmbed = new()
                 {
@@ -64,7 +70,7 @@ namespace XaiSharp.Commands.Slash
                     Color = Convert.ToUInt32(Util.CreateMD5Hash(title)[..6], 16),
                     Footer = new()
                     {
-                        Text = $"{data.alt} | {data.year}-{Util.PadInt(data.month, 2)}-{Util.PadInt(data.day, 2)}"
+                        Text = Util.CreateDateString(year, month, day)
                     }//,
                     //Timestamp = new DateTimeOffset(Convert.ToInt32(data.year), Convert.ToInt32(data.month), Convert.ToInt32(data.day), 0, 0, 0, new TimeSpan(0))
                 };
@@ -85,6 +91,23 @@ namespace XaiSharp.Commands.Slash
                     result = await client.GetStringAsync(url);
                 } catch (HttpRequestException)
                 {
+                    // 404 "comic"
+                    if (number == 404)
+                    {
+                        EmbedBuilder xkcd404Embed = new()
+                        {
+                            Title = "404: Not Found",
+                            Url = "https://xkcd.com/404",
+                            ImageUrl = "https://www.explainxkcd.com/wiki/images/9/92/not_found.png",
+                            Color = Convert.ToUInt32(Util.CreateMD5Hash("Not Found")[..6], 16),
+                            Footer = new()
+                            {
+                                Text = "2008-04-01"
+                            }
+                        };
+                        await RespondAsync(embed: xkcd404Embed.Build());
+                        return;
+                    }
                     EmbedBuilder errorEmbed = new()
                     {
                         Description = "This comic doesn't exist!",
@@ -94,6 +117,9 @@ namespace XaiSharp.Commands.Slash
                 }
                 dynamic data = JsonConvert.DeserializeObject(result);
                 string title = data.safe_title;
+                string year = data.year;
+                string month = data.month;
+                string day = data.day;
 
                 EmbedBuilder xkcdEmbed = new()
                 {
@@ -103,7 +129,7 @@ namespace XaiSharp.Commands.Slash
                     Color = Convert.ToUInt32(Util.CreateMD5Hash(title)[..6], 16),
                     Footer = new()
                     {
-                        Text = $"{data.alt} | {data.year}-{Util.PadInt(data.month, 2)}-{Util.PadInt(data.day, 2)}"
+                        Text = $"{data.alt} | {Util.CreateDateString(year, month, day)}"
                     }//,
                     //Timestamp = new DateTimeOffset(Convert.ToInt32(data.year), Convert.ToInt32(data.month), Convert.ToInt32(data.day), 0, 0, 0, new TimeSpan(0))
                 };
@@ -112,7 +138,6 @@ namespace XaiSharp.Commands.Slash
                 {
                     xkcdEmbed.Description = "*This comic is interactive!*";
                 }
-
                 await RespondAsync(embed: xkcdEmbed.Build());
             }
         }

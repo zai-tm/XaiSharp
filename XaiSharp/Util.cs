@@ -34,14 +34,9 @@ namespace XaiSharp
             }
         }
 
-        public static string PadInt(int num, int zeroes)
+        public static string CreateDateString(string year, string month, string day)
         {
-            return num.ToString().PadLeft(zeroes, '0');
-        }
-
-        public static string PadUInt(uint num, int zeroes)
-        {
-            return num.ToString().PadLeft(zeroes, '0');
+            return $"{year}-{month.PadLeft(2, '0')}-{day.PadLeft(2, '0')}";
         }
     }
 }
