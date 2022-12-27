@@ -33,5 +33,15 @@ namespace XaiSharp
                 // return sb.ToString();
             }
         }
+
+        public static string PadInt(int num, int zeroes)
+        {
+            return num.ToString().PadLeft(zeroes, '0');
+        }
+
+        public static string PadUInt(uint num, int zeroes)
+        {
+            return num.ToString().PadLeft(zeroes, '0');
+        }
     }
 }

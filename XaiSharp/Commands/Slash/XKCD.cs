@@ -26,7 +26,7 @@ namespace XaiSharp.Commands.Slash
                     Color = Convert.ToUInt32(Util.CreateMD5Hash(title)[..6], 16),
                     Footer = new()
                     {
-                        Text = $"{data.alt} | {data.year}-{data.month}-{data.day}"
+                        Text = $"{data.alt} | {data.year}-{Util.PadInt(data.month, 2)}-{Util.PadInt(data.day, 2)}"
                     }//,
                     //Timestamp = new DateTimeOffset(Convert.ToInt32(data.year), Convert.ToInt32(data.month), Convert.ToInt32(data.day), 0, 0, 0, new TimeSpan(0))
                 };
@@ -64,7 +64,7 @@ namespace XaiSharp.Commands.Slash
                     Color = Convert.ToUInt32(Util.CreateMD5Hash(title)[..6], 16),
                     Footer = new()
                     {
-                        Text = $"{data.alt} | {data.year}-{data.month}-{data.day}"
+                        Text = $"{data.alt} | {data.year}-{Util.PadInt(data.month, 2)}-{Util.PadInt(data.day, 2)}"
                     }//,
                     //Timestamp = new DateTimeOffset(Convert.ToInt32(data.year), Convert.ToInt32(data.month), Convert.ToInt32(data.day), 0, 0, 0, new TimeSpan(0))
                 };
@@ -103,7 +103,7 @@ namespace XaiSharp.Commands.Slash
                     Color = Convert.ToUInt32(Util.CreateMD5Hash(title)[..6], 16),
                     Footer = new()
                     {
-                        Text = $"{data.alt} | {data.year}-{data.month}-{data.day}"
+                        Text = $"{data.alt} | {data.year}-{Util.PadInt(data.month, 2)}-{Util.PadInt(data.day, 2)}"
                     }//,
                     //Timestamp = new DateTimeOffset(Convert.ToInt32(data.year), Convert.ToInt32(data.month), Convert.ToInt32(data.day), 0, 0, 0, new TimeSpan(0))
                 };
