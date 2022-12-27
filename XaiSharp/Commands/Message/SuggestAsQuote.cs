@@ -21,7 +21,6 @@ namespace XaiSharp.Commands.Message
                 .WithFooter($"Submitted by {Context.User.Username}", Context.User.GetAvatarUrl())
                 .WithCurrentTimestamp();
             //Console.WriteLine(suggestQuoteEmbed.ToString());
-
             if (message.Attachments.Count != 0 )
             {
                 suggestQuoteEmbed.ImageUrl = message.Attachments.FirstOrDefault().Url;

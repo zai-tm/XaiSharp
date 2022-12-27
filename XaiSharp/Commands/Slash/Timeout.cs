@@ -28,13 +28,14 @@ namespace XaiSharp.Commands.Slash
                     timeoutEmbed.Description = "Max length is 28 days!";
 
                     await RespondAsync(embed: timeoutEmbed.Build(), ephemeral: true);
-                } else
+                }
+                else
                 {
 
                     await user.SetTimeOutAsync(duration);
                     timeoutEmbed.Color = 0x57F287;
                     timeoutEmbed.Description = $"Timed out **{user.Username}#{user.Discriminator}** for **{duration:g}**";
-                    await RespondAsync(embed:timeoutEmbed.Build());
+                    await RespondAsync(embed: timeoutEmbed.Build());
                 }
 
             }

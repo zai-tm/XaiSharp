@@ -16,7 +16,7 @@ namespace XaiSharp.Commands.Slash
                 if (sides <= 0)
                     await RespondAsync("You cannot enter 0 or a negative number!", ephemeral: true);
                 else
-                    roll = random.NextInt64(1, sides.Value+1);
+                    roll = random.NextInt64(1, sides.Value + 1);
             }
 
             var diceEmbed = new EmbedBuilder()
