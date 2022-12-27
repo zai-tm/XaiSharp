@@ -70,7 +70,7 @@ namespace XaiSharp.Commands.Slash
                     Color = Convert.ToUInt32(Util.CreateMD5Hash(title)[..6], 16),
                     Footer = new()
                     {
-                        Text = Util.CreateDateString(year, month, day)
+                        Text = $"{data.alt} | {Util.CreateDateString(year, month, day)}"
                     }//,
                     //Timestamp = new DateTimeOffset(Convert.ToInt32(data.year), Convert.ToInt32(data.month), Convert.ToInt32(data.day), 0, 0, 0, new TimeSpan(0))
                 };

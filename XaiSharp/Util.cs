@@ -10,7 +10,6 @@ namespace XaiSharp
 {
     public class Util
     {
-
         public class Commit
         {
             public string Sha { get; set; }
@@ -34,7 +33,7 @@ namespace XaiSharp
         {
             public string Name { get; set; }
             public string Email { get; set; }
-            public DateTimeOffset Date { get; set; }
+            public DateTime Date { get; set; }
         }
 
         public class Parent

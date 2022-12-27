@@ -6,7 +6,7 @@ WebhookToken: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKl
 SqlUser: root # MySQL Username
 SqlPass: password # MySQL password
 SqlDb: xai # MySQL database
-Repository: zai-tm/XaiSharp # Github repository name
+Repository: "zai-tm/XaiSharp" # Github repository name
 GithubToken: ghp_AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIj # GitHub token
 ActivityType: Playing # Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING
 Activity: Anything you want! # It's true
