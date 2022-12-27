@@ -12,7 +12,7 @@ namespace XaiSharp.Commands.Slash
         public class TagGroup : InteractionModuleBase<SocketInteractionContext>
         {
 
-            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+            Config config = Util.ParseConfig(File.ReadAllText("config.yml"));
             [SlashCommand("create", "Create a tag")]
             public async Task HandleCreate([Summary(description: "Name of the tag")] string name, [Summary(description: "Content of the tag")] string content)
             {

@@ -7,7 +7,7 @@ namespace XaiSharp.Commands.Message
 {
     public class SuggestAsQuote : InteractionModuleBase<SocketInteractionContext>
     {
-        Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+        Config config = Util.ParseConfig(File.ReadAllText("config.yml"));
         [MessageCommand("Suggest as quote")]
         public async Task Handle(IMessage message)
         {

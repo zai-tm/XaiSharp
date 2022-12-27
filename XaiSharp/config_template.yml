@@ -1,0 +1,12 @@
+---
+BotOwnerId: 123456789012345678 # ID of the bot owner
+Token: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQr # Bot token
+WebhookId: 123456789012345678 # ID of the webhook, for suggestion commands
+WebhookToken: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQr # Webhook token
+SqlUser: root # MySQL Username
+SqlPass: password # MySQL password
+SqlDb: xai # MySQL database
+Repository: zai-tm/XaiSharp # Github repository name
+GithubToken: ghp_AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIj # GitHub token
+ActivityType: Playing # Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING
+Activity: Anything you want! # It's true
