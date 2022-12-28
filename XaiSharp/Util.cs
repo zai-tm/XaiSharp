@@ -10,46 +10,6 @@ namespace XaiSharp
 {
     public class Util
     {
-        public class Commit
-        {
-            public string Sha { get; set; }
-            public CommitDetail CommitDetail { get; set; }
-            public Author Author { get; set; }
-            public Author Committer { get; set; }
-            public string Message { get; set; }
-            public List<Parent> Parents { get; set; }
-        }
-
-        public class CommitDetail
-        {
-            public Author Author { get; set; }
-            public Author Committer { get; set; }
-            public string Message { get; set; }
-            public Tree Tree { get; set; }
-            public List<string> Verification { get; set; }
-        }
-
-        public class Author
-        {
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public DateTime Date { get; set; }
-        }
-
-        public class Parent
-        {
-            public string Sha { get; set; }
-            public string Url { get; set; }
-            public string HtmlUrl { get; set; }
-        }
-
-        public class Tree
-        {
-            public string Sha { get; set; }
-            public string Url { get; set; }
-        }
-
-
         public static Config ParseConfig(string ymlContents)
         {
             var deserializer = new DeserializerBuilder()
