@@ -1,0 +1,16 @@
+{
+  "BotOwnerID": "Your user ID.",
+  "Token": "Your bot's token.",
+  "ClientId": "Your bot's user ID.",
+  "GuildId": 123456789012345678,
+  "COMMENT_GuildId": "ID of the guild to push guild commands to. ",
+  "WebhookId": 123456789012345678,
+  "COMMENT_WebhookId": "ID of the webhook for suggest command.",
+  "WebhookToken": "Your webhook's token for suggest command.",
+  "SqlUser": "MySQL user.",
+  "SqlPass": "MySQL password.",
+  "SqlDB": "MYSQL database.",
+  "ActivityType": "PLAYING",
+  "COMMENT_ActivityType": "Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING",
+  "Activity": "Anything you want."
+}

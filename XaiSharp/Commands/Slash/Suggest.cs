@@ -6,7 +6,7 @@ namespace XaiSharp.Commands.Slash
 {
     public class Suggest : InteractionModuleBase<SocketInteractionContext>
     {
-        Config config = Util.ParseConfig(File.ReadAllText("config.yml"));
+        Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
 
         [SlashCommand("suggest", "Suggest a feature")]
         public async Task Handle(string suggestion)

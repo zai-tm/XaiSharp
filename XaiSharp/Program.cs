@@ -11,19 +11,19 @@ namespace XaiSharp
     {
         public ulong BotOwnerId { get; set; }
         public string Token { get; set; }
+        public ulong ClientId { get; set; }
+        public ulong GuildId { get; set; }
         public ulong WebhookId { get; set; }
         public string WebhookToken { get; set; }
         public string SqlUser { get; set; }
         public string SqlPass { get; set; }
         public string SqlDb { get; set; }
-        public string Repository { get; set; }
-        public string GithubToken { get; set; }
         public string ActivityType { get; set; }
         public string Activity { get; set; }
     }
     public class Program
     {
-        Config _config = Util.ParseConfig(File.ReadAllText("config.yml"));
+        Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
         public static Task Main() => new Program().MainAsync();
 
         public async Task MainAsync()
