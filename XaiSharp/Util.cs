@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using YamlDotNet.Serialization;
 namespace XaiSharp
 {
     public class Util

@@ -10,16 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="config.json" />
     <None Remove="JSON\8ball.json" />
     <None Remove="JSON\death.json" />
     <None Remove="JSON\quotes.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="JSON\8ball.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -50,6 +46,12 @@
     <Content Include="JSON\death.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="config.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -32,7 +32,7 @@ namespace XaiSharp.Commands.Slash
                     client.DefaultRequestHeaders.UserAgent.Add(new($"(+https://github.com/{config.Repository})"));
                     var response = client.GetAsync(url).Result;
                     var json = response.Content.ReadAsStringAsync().Result;
-                    Console.WriteLine(json);
+                    //Console.WriteLine(json);
                     dynamic commits = JsonConvert.DeserializeObject(json);
                     string sha = commits[0].sha;
                     //Console.WriteLine(commits[0].commit.author.date.ToString("yyyy-MM-dd HH_mm_ss"));
