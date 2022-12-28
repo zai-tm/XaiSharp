@@ -36,7 +36,7 @@ namespace XaiSharp.Commands.Slash
                     dynamic commits = JsonConvert.DeserializeObject(json);
                     string sha = commits[0].sha;
                     //Console.WriteLine(commits[0].commit.author.date.ToString("yyyy-MM-dd HH_mm_ss"));
-                    aboutEmbed.Description = $"Version {commits[0].commit.author.date.ToString("yyyy-MM-dd HH_mm_ss")} \\(commit [`{sha[..6]}`]({commits[0].html_url})\\)";
+                    aboutEmbed.Description = $"Version {commits[0].commit.author.date.ToString("yyyy-MM-dd HH_mm_ss")} \\(commit [`{sha[..7]}`]({commits[0].html_url})\\)";
                     aboutEmbed.Color = Convert.ToUInt32(sha[..6], 16);
                     await RespondAsync(embed: aboutEmbed.Build());
                 }
