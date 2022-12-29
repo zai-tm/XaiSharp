@@ -18,5 +18,6 @@ namespace XaiSharp
         public static uint Success => 0x57F287;
         public static uint Error => 0xED4245;
         public static uint Negative => 0x660000;
+        public static uint Positive => 0x006600;
     }
 }
