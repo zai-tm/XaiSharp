@@ -10,6 +10,8 @@ namespace XaiSharp.Commands.Slash
         {
             public string Name { get; set; }
             public string Emoji { get; set; }
+            [JsonProperty("image")]
+            public string? ImageUrl { get; set; }
             public DateTimeOffset Date { get; set; }
         }
 
@@ -48,6 +50,11 @@ namespace XaiSharp.Commands.Slash
                             countdownEmbed.Description = $"{nextEvent.Emoji} {nextEvent.Name} was <t:{nextEvent.Date.ToUnixTimeSeconds()}:R>! {nextEvent.Emoji}";
                             countdownEmbed.Color = 0x888888;
                             break;
+                    }
+
+                    if (nextEvent.ImageUrl != null)
+                    {
+                        countdownEmbed.ThumbnailUrl = nextEvent.ImageUrl;
                     }
 
                     await RespondAsync(embed: countdownEmbed.Build());
