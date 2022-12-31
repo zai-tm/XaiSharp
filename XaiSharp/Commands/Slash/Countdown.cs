@@ -32,7 +32,7 @@ namespace XaiSharp.Commands.Slash
                         //Description = $"{nextEvent.Emoji} {nextEvent.Name} is <t:{nextEvent.Date.ToUnixTimeSeconds()}:R>! {nextEvent.Emoji}",
                         Footer = new()
                         {
-                            Text = $"Target date: {nextEvent.Date.ToString("MMMM dd, yyyy hh:mm:ss tt")} UTC"
+                            Text = $"Target date: {nextEvent.Date.ToString("MMMM d, yyyy hh:mm:ss tt")} UTC"
                         }
                     };
                     Console.WriteLine(nextEvent.Date);
