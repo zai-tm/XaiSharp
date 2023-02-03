@@ -10,3 +10,10 @@ Repository: "zai-tm/XaiSharp" # Github repository name
 GithubToken: ghp_AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIj # GitHub token
 ActivityType: Playing # Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING
 Activity: Anything you want! # It's true
+TumblrReposter: true
+# Below is only needed if you have the Tumblr reposter enabled!
+TumblrBlog: pb95community
+TumblrConsumerKey: AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWx
+TumblrConsumerSecret: AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWx
+TumblrOauthToken: AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWx
+TumblrOauthTokenSecret: AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQrStUvWx

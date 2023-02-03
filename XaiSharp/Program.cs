@@ -4,6 +4,11 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using DontPanic.TumblrSharp;
+using DontPanic.TumblrSharp.Client;
+using System.Text.RegularExpressions;
+using System.Net.Mail;
+using System.Net;
 
 namespace XaiSharp
 {
@@ -20,6 +25,12 @@ namespace XaiSharp
         public string GithubToken { get; set; }
         public string ActivityType { get; set; }
         public string Activity { get; set; }
+        public bool TumblrReposter { get; set; }
+        public string? TumblrBlog { get; set; }
+        public string? TumblrConsumerKey { get; set; }
+        public string? TumblrConsumerSecret { get; set; }
+        public string? TumblrOauthToken { get; set; }
+        public string? TumblrOauthTokenSecret { get; set; }
     }
     public class Program
     {
@@ -65,6 +76,9 @@ namespace XaiSharp
                 await slashCommmands.RegisterCommandsGloballyAsync();
             };
 
+            // tumblr reposter
+            if (_config.TumblrReposter) _client.ReactionAdded += HandleReactionAdded;
+
             await _client.LoginAsync(TokenType.Bot, _config.Token);
             await _client.StartAsync();
             ActivityType at = _config.ActivityType.ToLower() switch
@@ -82,5 +96,67 @@ namespace XaiSharp
             await Task.Delay(-1);
 
         }
+
+        public async Task HandleReactionAdded(Cacheable<IUserMessage, ulong> msg, Cacheable<IMessageChannel, ulong> chan, SocketReaction react)
+        {
+            try
+            {
+                var message = await msg.GetOrDownloadAsync();
+                                                                           // 🔁 emoji
+                var emotes = await message.GetReactionUsersAsync(new Emoji("\U0001f501"), 1000).FlattenAsync();
+                int count = emotes.Count();
+
+                if (count < 4)
+                {
+                    Console.WriteLine("Not enough reactions!");
+                    return;
+                }
+                // only allow pb95 discord server
+                if ((message.Channel as IGuildChannel).GuildId != 990326151987724378)
+                {
+                    return;
+                }
+
+                var tumblr = new TumblrClientFactory().Create<TumblrClient>(
+                    _config.TumblrConsumerKey,
+                    _config.TumblrConsumerSecret,
+                    new DontPanic.TumblrSharp.OAuth.Token(
+                        _config.TumblrOauthToken, _config.TumblrOauthTokenSecret));
+
+
+                //check attachments 
+                if (message.Attachments.FirstOrDefault() != null )
+                {
+                    List<string>? imageUrls = new();
+                    List<BinaryFile> imageBinaries = new();
+
+                    // TODO: videos
+                    var webClient = new HttpClient();
+                    foreach (var attachment in message.Attachments)
+                    {
+                        if (Regex.IsMatch(attachment.ContentType, "/png|jpeg/"))
+                        {
+                            byte[] imageBytes = await webClient.GetByteArrayAsync(attachment.Url);
+                            imageBinaries.Add(new(imageBytes));
+                        }
+                    }
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, message.CleanContent));
+                }
+                else
+                {
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText(message.CleanContent));
+                }
+
+
+                //Console.WriteLine(user.ToString());
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+        }
+
     }
 }
