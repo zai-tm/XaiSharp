@@ -106,7 +106,7 @@ namespace XaiSharp
                 var emotes = await message.GetReactionUsersAsync(new Emoji("\U0001f501"), 1000).FlattenAsync();
                 int count = emotes.Count();
 
-                if (count < 4)
+                if (count == 4)
                 {
                     Console.WriteLine("Not enough reactions!");
                     return;
@@ -140,11 +140,11 @@ namespace XaiSharp
                             imageBinaries.Add(new(imageBytes));
                         }
                     }
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, message.CleanContent));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, CreateHyperlinks(message.CleanContent)));
                 }
                 else
                 {
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText(message.CleanContent));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText(CreateHyperlinks(message.CleanContent)));
                 }
 
 
@@ -156,6 +156,12 @@ namespace XaiSharp
                 Console.WriteLine(e);
             }
 
+        }
+
+        public string CreateHyperlinks(string input)
+        {
+            Regex regex = new("/https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&\\/\\/=]*)/gi");
+            return regex.Replace(input, "[$0](<$0>)");
         }
 
     }
