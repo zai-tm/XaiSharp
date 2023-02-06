@@ -9,6 +9,7 @@ using DontPanic.TumblrSharp.Client;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
 using System.Net;
+using System.Data.SQLite;
 
 namespace XaiSharp
 {
@@ -106,7 +107,7 @@ namespace XaiSharp
                 var emotes = await message.GetReactionUsersAsync(new Emoji("\U0001f501"), 1000).FlattenAsync();
                 int count = emotes.Count();
 
-                if (count == 4)
+                if (count <= 3)
                 {
                     Console.WriteLine("Not enough reactions!");
                     return;
