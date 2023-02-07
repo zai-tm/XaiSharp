@@ -9,6 +9,7 @@ using DontPanic.TumblrSharp.Client;
 using System.Text.RegularExpressions;
 using System.Net.Mail;
 using System.Net;
+using System.Data.SQLite;
 
 namespace XaiSharp
 {
@@ -18,9 +19,7 @@ namespace XaiSharp
         public string Token { get; set; }
         public ulong WebhookId { get; set; }
         public string WebhookToken { get; set; }
-        public string SqlUser { get; set; }
-        public string SqlPass { get; set; }
-        public string SqlDb { get; set; }
+        public string SQLiteDatabase { get; set; }
         public string Repository { get; set; }
         public string GithubToken { get; set; }
         public string ActivityType { get; set; }
@@ -101,21 +100,56 @@ namespace XaiSharp
         {
             try
             {
+                if (!react.Emote.Equals(new Emoji("🔁")))
+                {
+                    Console.WriteLine("Not 🔁 (repeat) emoji!");
+                    return;
+                }
+
                 var message = await msg.GetOrDownloadAsync();
-                                                                           // 🔁 emoji
-                var emotes = await message.GetReactionUsersAsync(new Emoji("\U0001f501"), 1000).FlattenAsync();
+                var emotes = await message.GetReactionUsersAsync(new Emoji("🔁"), 1000).FlattenAsync();
                 int count = emotes.Count();
 
-                if (count == 4)
+                // path to the database
+                string dbPath = @"URI=file:"+_config.SQLiteDatabase;
+
+                using var conn = new SQLiteConnection(dbPath);
+                conn.Open();
+
+                if (count <= 4)
                 {
-                    Console.WriteLine("Not enough reactions!");
+                    Console.WriteLine("Not enough reactions! Got "+count+", expected 4");
                     return;
                 }
                 // only allow pb95 discord server
                 if ((message.Channel as IGuildChannel).GuildId != 990326151987724378)
                 {
+                    Console.WriteLine("wrong server");
+
+                    // DO YOU LIKE HOW I DEBUG MY CODE ?
                     return;
                 }
+
+                // check if it has already been posted
+                string cmdTxt = "SELECT * FROM RepostedMessages";
+                using var cmd = new SQLiteCommand(cmdTxt, conn);
+                using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    if ((long)msg.Id == rdr.GetInt64(0)) {
+                        Console.WriteLine("Message " + message.Id + " has already been posted!");
+                        return;
+                    }
+                }
+
+                rdr.Close();
+
+                cmd.CommandText = "INSERT INTO RepostedMessages(MessageId) VALUES(@mid)";
+                cmd.Parameters.AddWithValue("@mid", message.Id);
+                cmd.Prepare();
+
+                cmd.ExecuteNonQuery();
 
                 var tumblr = new TumblrClientFactory().Create<TumblrClient>(
                     _config.TumblrConsumerKey,
@@ -146,9 +180,7 @@ namespace XaiSharp
                 {
                     await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText(CreateHyperlinks(message.CleanContent)));
                 }
-
-
-                //Console.WriteLine(user.ToString());
+                Console.WriteLine("Posted message "+message.Id+", content:\n"+message.CleanContent);
 
             }
             catch (Exception e)
