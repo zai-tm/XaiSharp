@@ -2,8 +2,6 @@
 The bot I made for the Progressbar95 discord server.
 
 ## Setup
-Some manual setup is required for the Tags system and the Tumblr Reposter, as they use an SQLite database.
+Some setup is required for the Tags system and the Tumblr Reposter, as they use an SQLite database.
 
-```
-sqlite commands go here
-```
+Create a database using the init file (dbinit.sql) and add that path to your config.

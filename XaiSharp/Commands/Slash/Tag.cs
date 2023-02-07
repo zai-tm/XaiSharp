@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿// Rewrite Soon™
+
+/*using Discord;
 using Discord.Interactions;
 using Newtonsoft.Json;
 using MySql.Data;
@@ -196,4 +198,4 @@ namespace XaiSharp.Commands.Slash
             }
         }
     }
-}
+}*/

@@ -1,1 +1,0 @@
-CREATE TABLE `tags` ( `id` INT NOT NULL AUTO_INCREMENT , `name` TINYTEXT NOT NULL , `content` TEXT NOT NULL , `userid` BIGINT NOT NULL , `created_at` DATETIME NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
