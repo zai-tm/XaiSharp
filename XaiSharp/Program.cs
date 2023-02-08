@@ -174,11 +174,11 @@ namespace XaiSharp
                             imageBinaries.Add(new(imageBytes));
                         }
                     }
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, CreateHyperlinks(message.Content)));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, $"# Message from {message.Author.Username}#{message.Author.Discriminator}\n{CreateHyperlinks(message.Content)}"));
                 }
                 else
                 {
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText(CreateHyperlinks(message.Content)));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText($"# Message from {message.Author.Username}#{message.Author.Discriminator}\n{CreateHyperlinks(message.Content)}"));
                 }
                 Console.WriteLine("Posted message "+message.Id+", content:\n"+message.Content);
 
