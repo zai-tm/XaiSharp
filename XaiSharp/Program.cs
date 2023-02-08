@@ -76,7 +76,7 @@ namespace XaiSharp
             };
 
             // tumblr reposter
-            //if (_config.TumblrReposter) _client.ReactionAdded += HandleReactionAdded;
+            if (_config.TumblrReposter) _client.ReactionAdded += HandleReactionAdded;
 
             await _client.LoginAsync(TokenType.Bot, _config.Token);
             await _client.StartAsync();
