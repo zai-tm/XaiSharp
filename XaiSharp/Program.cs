@@ -193,7 +193,7 @@ namespace XaiSharp
         public string CreateHyperlinks(string input)
         {
             Regex regex = new(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)");
-            return regex.Replace(input, "[$0](<$0>)");
+            return regex.Replace(input, @"[$0](<$0>)");
         }
 
     }
