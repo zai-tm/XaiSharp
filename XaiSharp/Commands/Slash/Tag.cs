@@ -1,10 +1,7 @@
-﻿// Rewrite Soon™
-
-/*using Discord;
+﻿using Discord;
 using Discord.Interactions;
 using Newtonsoft.Json;
-using MySql.Data;
-using MySql.Data.MySqlClient;
+using System.Data.SQLite;
 
 namespace XaiSharp.Commands.Slash
 {
@@ -18,20 +15,20 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("create", "Create a tag")]
             public async Task HandleCreate([Summary(description: "Name of the tag")] string name, [Summary(description: "Content of the tag")] string content)
             {
-                string connStr = $"server=localhost;user={config.SqlUser};database={config.SqlDb};password={config.SqlPass};Allow User Variables=True";
-                MySqlConnection conn = new(connStr);
+                string dbPath = @"URI=file:" + config.SQLiteDatabase;
+                using var conn = new SQLiteConnection(dbPath);
                 try
                 {
                     conn.Open();
 
-                    MySqlCommand cmd = new($"select exists(select name from tags where name=@n)", conn);
+                    SQLiteCommand cmd = new($"select exists(select Name from tags where Name=@n)", conn);
                     cmd.Parameters.Add(new("@n", name));
                     object scal = cmd.ExecuteScalar();
                     if (scal != null && Convert.ToInt32(scal) == 0)
                     {
                         try
                         {
-                            MySqlCommand insertCmd = new($"insert into tags (name,content,userid,created_at) values (@n, @c, {Context.User.Id}, '{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss}')", conn);
+                            SQLiteCommand insertCmd = new($"insert into tags (Name,Content,UserId,CreatedAt) values (@n, @c, {Context.User.Id}, '{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss}')", conn);
                             Console.WriteLine(name.Substring(0, Math.Min(50, name.Length)));
                             insertCmd.Parameters.Add(new("n", name.Substring(0, Math.Min(50, name.Length))));
                             insertCmd.Parameters.Add(new("c", content.Substring(0, Math.Min(2000, content.Length))));
@@ -60,13 +57,13 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("edit", "Edit a tag")]
             public async Task HandleEdit([Summary(description: "Name of the tag")] string name, [Summary(description: "New content of the tag")] string content)
             {
-                string connStr = $"server=localhost;user={config.SqlUser};database={config.SqlDb};password={config.SqlPass};Allow User Variables=True";
-                MySqlConnection conn = new(connStr);
+                string dbPath = @"URI=file:" + config.SQLiteDatabase;
+                using var conn = new SQLiteConnection(dbPath);
                 try
                 {
                     conn.Open();
 
-                    MySqlCommand cmd = new($"select name,userid from tags where name = @n", conn);
+                    SQLiteCommand cmd = new($"select Name,UserId from tags where Name = @n", conn);
                     cmd.Parameters.Add(new("@n", name));
                     var rdr = cmd.ExecuteReader();
                     if (rdr != null && rdr.HasRows)
@@ -74,16 +71,16 @@ namespace XaiSharp.Commands.Slash
                         while (rdr.Read())
                         {
                             string tagName = rdr.GetString(0);
-                            ulong tagUser = rdr.GetUInt64(1);
+                            long tagUser = rdr.GetInt64(1);
 
-                            if (Context.User.Id != tagUser)
+                            if ((long)Context.User.Id != tagUser)
                             {
                                 await RespondAsync("**You did not create this tag.**", ephemeral: true);
                                 return;
                             }
                         }
                         rdr.Close();
-                        MySqlCommand editCmd = new("update tags set content=@c where name=@n", conn);
+                        SQLiteCommand editCmd = new("update tags set Content=@c where Name=@n", conn);
                         editCmd.Parameters.Add(new("@n", name));
                         editCmd.Parameters.Add(new("@c", content.Substring(0, Math.Min(2000, content.Length))));
                         editCmd.ExecuteNonQuery();
@@ -106,20 +103,20 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("display", "Display a tag's contents")]
             public async Task HandleDisplay([Summary(description: "Name of the tag")] string name)
             {
-                string connStr = $"server=localhost;user={config.SqlUser};database={config.SqlDb};password={config.SqlPass};Allow User Variables=True";
-                MySqlConnection conn = new(connStr);
+                string dbPath = @"URI=file:" + config.SQLiteDatabase;
+                using var conn = new SQLiteConnection(dbPath);
                 try
                 {
                     conn.Open();
 
-                    MySqlCommand cmd = new($"select exists(select name from tags where name=@n)", conn);
+                    SQLiteCommand cmd = new($"select exists(select Name from tags where Name=@n)", conn);
                     cmd.Parameters.Add(new("@n", name));
                     object scal = cmd.ExecuteScalar();
                     if (scal != null && Convert.ToInt32(scal) == 1)
                     {
                         try
                         {
-                            MySqlCommand displayCmd = new($"select content from tags where name=@n", conn);
+                            SQLiteCommand displayCmd = new($"select Content from tags where Name=@n", conn);
                             displayCmd.Parameters.Add(new("n", name.Substring(0, Math.Min(50, name.Length))));
                             object dispScal = displayCmd.ExecuteScalar();
                             if (dispScal != null)
@@ -149,14 +146,14 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("info", "Information about a tag")]
             public async Task HandleInfo([Summary(description: "Name of the tag")] string name)
             {
-                string connStr = $"server=localhost;user={config.SqlUser};database={config.SqlDb};password={config.SqlPass}";
-                MySqlConnection conn = new(connStr);
+                string dbPath = @"URI=file:" + config.SQLiteDatabase;
+                using var conn = new SQLiteConnection(dbPath);
                 try
                 {
                     conn.Open();
 
-                    string query = $"select id,name,userid,created_at from tags where `name` = @n";
-                    MySqlCommand cmd = new(query, conn);
+                    string query = $"select Id,Name,UserId,CreatedAt from tags where `name` = @n";
+                    SQLiteCommand cmd = new(query, conn);
                     cmd.Parameters.Add(new("n", name));
                     var reader = cmd.ExecuteReader();
                     if (reader != null && reader.HasRows)
@@ -166,9 +163,9 @@ namespace XaiSharp.Commands.Slash
 
                             int tag_id = reader.GetInt32(0);
                             string db_name = reader.GetString(1);
-                            ulong userid = reader.GetUInt64(2);
+                            long userid = reader.GetInt64(2);
                             DateTimeOffset created = new(reader.GetDateTime(3), new TimeSpan(0, 0, 0));
-                            IGuildUser user = Context.Guild.GetUser(userid);
+                            IGuildUser user = Context.Guild.GetUser((ulong)userid);
                             EmbedBuilder infoEmbed = new()
                             {
                                 Color = (uint)Math.Floor(new Random().NextDouble() * (0xffffff + 1)),
@@ -198,4 +195,4 @@ namespace XaiSharp.Commands.Slash
             }
         }
     }
-}*/
+}
