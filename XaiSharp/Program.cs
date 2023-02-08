@@ -174,13 +174,13 @@ namespace XaiSharp
                             imageBinaries.Add(new(imageBytes));
                         }
                     }
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, CreateHyperlinks(message.CleanContent)));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, CreateHyperlinks(message.Content)));
                 }
                 else
                 {
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText(CreateHyperlinks(message.CleanContent)));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText(CreateHyperlinks(message.Content)));
                 }
-                Console.WriteLine("Posted message "+message.Id+", content:\n"+message.CleanContent);
+                Console.WriteLine("Posted message "+message.Id+", content:\n"+message.Content);
 
             }
             catch (Exception e)
@@ -193,7 +193,7 @@ namespace XaiSharp
         public string CreateHyperlinks(string input)
         {
             Regex regex = new(@"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))");
-            return regex.Replace(input, @"[$1](<$1>)");
+            return regex.Replace(input, @"<a href='$1'>$1</a>");
         }
 
     }
