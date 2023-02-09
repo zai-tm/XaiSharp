@@ -174,11 +174,11 @@ namespace XaiSharp
                             imageBinaries.Add(new(imageBytes));
                         }
                     }
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, $"# Message from {message.Author.Username}#{message.Author.Discriminator}\n{CreateHyperlinks(message.Content)}"));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, $"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{TumblrFormat(message.Content)}</p>"));
                 }
                 else
                 {
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText($"# Message from {message.Author.Username}#{message.Author.Discriminator}\n{CreateHyperlinks(message.Content)}"));
+                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText($"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{TumblrFormat(message.Content)}</p>"));
                 }
                 Console.WriteLine("Posted message "+message.Id+", content:\n"+message.Content);
 
@@ -190,10 +190,12 @@ namespace XaiSharp
 
         }
 
-        public string CreateHyperlinks(string input)
+        public string TumblrFormat(string input)
         {
             Regex regex = new(@"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))");
-            return regex.Replace(input, @"<a href='$1'>$1</a>");
+            Regex newline = new(@"\n");
+            string hyperlinks = regex.Replace(input, @"<a href='$1'>$1</a>");
+            return newline.Replace(hyperlinks, "<br>");
         }
 
     }
