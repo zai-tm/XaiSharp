@@ -171,9 +171,9 @@ namespace XaiSharp.Commands.Slash
                                 Color = (uint)Math.Floor(new Random().NextDouble() * (0xffffff + 1)),
                                 Author = new() { Name = db_name }
                             };
-                            infoEmbed.AddField("Created at", $"<t:{((DateTimeOffset)created.UtcDateTime).ToUnixTimeSeconds()}:f>", true);
-                            infoEmbed.AddField("Author", $"{user.Mention} ({userid})", true);
-                            infoEmbed.AddField("ID", $"{tag_id}", true);
+                            infoEmbed.AddField("Created at", $"<t:{((DateTimeOffset)created.UtcDateTime).ToUnixTimeSeconds()}:f>", false);
+                            infoEmbed.AddField("Author", $"{user.Mention} ({userid})", false);
+                            infoEmbed.AddField("ID", $"{tag_id}", false);
                             Console.WriteLine(userid);
                             await RespondAsync(embed: infoEmbed.Build());
                         }
