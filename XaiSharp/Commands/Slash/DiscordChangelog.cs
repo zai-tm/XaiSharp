@@ -2,7 +2,7 @@
 using Discord.Interactions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using System.Globalization;
 
 namespace XaiSharp.Commands.Slash
 {
@@ -32,7 +32,7 @@ namespace XaiSharp.Commands.Slash
             string changelogRes = await client.GetStringAsync(changelogUrl);
             Changelog changelog = JsonConvert.DeserializeObject<Changelog>(changelogRes);
 
-            string changelogDate = changelog.Date.ToString("D");
+            string changelogDate = changelog.Date.ToString("MMMM dd, yyyy");
 
             EmbedBuilder changelogEmbed = new()
             {
