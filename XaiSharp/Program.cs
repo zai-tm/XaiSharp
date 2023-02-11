@@ -116,7 +116,7 @@ namespace XaiSharp
                 using var conn = new SQLiteConnection(dbPath);
                 conn.Open();
 
-                if (count <= 4)
+                if (count < 4)
                 {
                     Console.WriteLine("Not enough reactions! Got "+count+", expected 4");
                     return;
