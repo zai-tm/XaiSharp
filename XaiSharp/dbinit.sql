@@ -10,3 +10,8 @@ CREATE TABLE [Tags] (
 CREATE TABLE [RepostedMessages] (
     [MessageId] UNSIGNED BIG INT NOT NULL
 );
+
+CREATE TABLE [Ranks] (
+    [UserId] UNSIGNED BIG INT NOT NULL,
+    [Rank] INT NOT NULL
+);
