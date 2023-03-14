@@ -22,7 +22,7 @@ namespace XaiSharp.Commands.Slash
             {
                 using (var client = new HttpClient())
                 {
-                    var nextEventJson = await client.GetStringAsync("https://pb95discord.cf/event.json");
+                    var nextEventJson = await client.GetStringAsync("https://pb95discord.com/event.json");
                     Event nextEvent = JsonConvert.DeserializeObject<Event>(nextEventJson);
 
                     EmbedBuilder countdownEmbed = new()
