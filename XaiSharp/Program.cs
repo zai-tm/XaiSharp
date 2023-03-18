@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Net.Mail;
 using System.Net;
 using System.Data.SQLite;
+using System.Reactive.Disposables;
+using Discord.Webhook;
 
 namespace XaiSharp
 {
@@ -100,87 +102,116 @@ namespace XaiSharp
         {
             try
             {
-                if (!react.Emote.Equals(new Emoji("🔁")))
+                switch (react.Emote)
                 {
-                    Console.WriteLine("Not 🔁 (repeat) emoji!");
-                    return;
-                }
-
-                var message = await msg.GetOrDownloadAsync();
-                var emotes = await message.GetReactionUsersAsync(new Emoji("🔁"), 1000).FlattenAsync();
-                int count = emotes.Count();
-
-                // path to the database
-                string dbPath = @"URI=file:"+_config.SQLiteDatabase;
-
-                using var conn = new SQLiteConnection(dbPath);
-                conn.Open();
-
-                if (count < 4)
-                {
-                    Console.WriteLine("Not enough reactions! Got "+count+", expected 4");
-                    return;
-                }
-                // only allow pb95 discord server
-                if ((message.Channel as IGuildChannel).GuildId != 990326151987724378)
-                {
-                    Console.WriteLine("wrong server");
-
-                    // DO YOU LIKE HOW I DEBUG MY CODE ?
-                    return;
-                }
-
-                // check if it has already been posted
-                string cmdTxt = "SELECT * FROM RepostedMessages";
-                using var cmd = new SQLiteCommand(cmdTxt, conn);
-                using SQLiteDataReader rdr = cmd.ExecuteReader();
-
-                while (rdr.Read())
-                {
-                    if ((long)msg.Id == rdr.GetInt64(0)) {
-                        Console.WriteLine("Message " + message.Id + " has already been posted!");
-                        return;
-                    }
-                }
-
-                rdr.Close();
-
-                cmd.CommandText = "INSERT INTO RepostedMessages(MessageId) VALUES(@mid)";
-                cmd.Parameters.AddWithValue("@mid", message.Id);
-                cmd.Prepare();
-
-                cmd.ExecuteNonQuery();
-
-                var tumblr = new TumblrClientFactory().Create<TumblrClient>(
-                    _config.TumblrConsumerKey,
-                    _config.TumblrConsumerSecret,
-                    new DontPanic.TumblrSharp.OAuth.Token(
-                        _config.TumblrOauthToken, _config.TumblrOauthTokenSecret));
-
-
-                //check attachments 
-                if (message.Attachments.FirstOrDefault() != null )
-                {
-                    List<string>? imageUrls = new();
-                    List<BinaryFile> imageBinaries = new();
-
-                    // TODO: videos
-                    var webClient = new HttpClient();
-                    foreach (var attachment in message.Attachments)
-                    {
-                        if (Regex.IsMatch(attachment.ContentType, "/png|jpeg/"))
+                    case var _ when react.Emote.Equals(new Emoji("🔁")):
                         {
-                            byte[] imageBytes = await webClient.GetByteArrayAsync(attachment.Url);
-                            imageBinaries.Add(new(imageBytes));
+                            var message = await msg.GetOrDownloadAsync();
+                            var emotes = await message.GetReactionUsersAsync(new Emoji("🔁"), 1000).FlattenAsync();
+                            int count = emotes.Count();
+
+                            // path to the database
+                            string dbPath = @"URI=file:" + _config.SQLiteDatabase;
+
+                            using var conn = new SQLiteConnection(dbPath);
+                            conn.Open();
+
+                            if (count < 4)
+                            {
+                                Console.WriteLine("Not enough reactions! Got " + count + ", expected 4");
+                                return;
+                            }
+                            // only allow pb95 discord server
+                            if ((message.Channel as IGuildChannel).GuildId != 990326151987724378)
+                            {
+                                Console.WriteLine("wrong server");
+
+                                // DO YOU LIKE HOW I DEBUG MY CODE ?
+                                return;
+                            }
+
+                            // check if it has already been posted
+                            string cmdTxt = "SELECT * FROM RepostedMessages";
+                            using var cmd = new SQLiteCommand(cmdTxt, conn);
+                            using SQLiteDataReader rdr = cmd.ExecuteReader();
+
+                            while (rdr.Read())
+                            {
+                                if ((long)msg.Id == rdr.GetInt64(0))
+                                {
+                                    Console.WriteLine("Message " + message.Id + " has already been posted!");
+                                    return;
+                                }
+                            }
+
+                            rdr.Close();
+
+                            cmd.CommandText = "INSERT INTO RepostedMessages(MessageId) VALUES(@mid)";
+                            cmd.Parameters.AddWithValue("@mid", message.Id);
+                            cmd.Prepare();
+
+                            cmd.ExecuteNonQuery();
+
+                            var tumblr = new TumblrClientFactory().Create<TumblrClient>(
+                                _config.TumblrConsumerKey,
+                                _config.TumblrConsumerSecret,
+                                new DontPanic.TumblrSharp.OAuth.Token(
+                                    _config.TumblrOauthToken, _config.TumblrOauthTokenSecret));
+
+
+                            //check attachments 
+                            if (message.Attachments.FirstOrDefault() != null)
+                            {
+                                List<string>? imageUrls = new();
+                                List<BinaryFile> imageBinaries = new();
+
+                                // TODO: videos
+                                var webClient = new HttpClient();
+                                foreach (var attachment in message.Attachments)
+                                {
+                                    if (Regex.IsMatch(attachment.ContentType, "/png|jpeg/"))
+                                    {
+                                        byte[] imageBytes = await webClient.GetByteArrayAsync(attachment.Url);
+                                        imageBinaries.Add(new(imageBytes));
+                                    }
+                                }
+                                await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, $"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
+                            }
+                            else
+                            {
+                                await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText($"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
+                            }
+                            Console.WriteLine("Posted message " + message.Id + ", content:\n" + message.Content);
                         }
-                    }
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, $"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
+                        break;
+                    case var _ when react.Emote.Equals(new Emoji("⬇️")):
+                        {
+                            var message = await msg.GetOrDownloadAsync();
+                            var emotes = await message.GetReactionUsersAsync(new Emoji("⬇️"), 1000).FlattenAsync();
+                            int count = emotes.Count();
+
+                            if (count < 5)
+                            {
+                                Console.WriteLine("not enough rections");
+                                return;
+                            }
+                            DiscordWebhookClient webhook = new(_config.WebhookId, _config.WebhookToken);
+
+                            var BadMessageEmbed = new EmbedBuilder()
+                                .WithAuthor(message.Author.Username, message.Author.GetAvatarUrl())
+                                .WithDescription(message.Content)
+                                .WithTimestamp(message.Timestamp);
+
+                            await webhook.SendMessageAsync(null, false, new[] { BadMessageEmbed.Build() }, "really bad message");
+                            await message.DeleteAsync();
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Not valid emoji!");
+                        break;
+
                 }
-                else
-                {
-                    await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText($"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
-                }
-                Console.WriteLine("Posted message "+message.Id+", content:\n"+message.Content);
+                
 
             }
             catch (Exception e)
