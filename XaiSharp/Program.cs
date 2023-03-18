@@ -188,7 +188,8 @@ namespace XaiSharp
                         {
                             var message = await msg.GetOrDownloadAsync();
                             var emotes = await message.GetReactionUsersAsync(new Emoji("⬇️"), 1000).FlattenAsync();
-                            int count = emotes.Count();
+                            var upEmotes = await message.GetReactionUsersAsync(new Emoji("⬆️"), 1000).FlattenAsync();
+                            int count = emotes.Count() - upEmotes.Count();
 
                             if (count < 5)
                             {
