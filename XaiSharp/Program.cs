@@ -201,7 +201,10 @@ namespace XaiSharp
                                 .WithAuthor(message.Author.Username, message.Author.GetAvatarUrl())
                                 .WithDescription(message.Content)
                                 .WithTimestamp(message.Timestamp);
-
+                            if (message.Attachments.Count != 0)
+                            {
+                                BadMessageEmbed.ImageUrl = message.Attachments.FirstOrDefault().Url;
+                            }
                             await webhook.SendMessageAsync(null, false, new[] { BadMessageEmbed.Build() }, "really bad message");
                             await message.DeleteAsync();
                         }
