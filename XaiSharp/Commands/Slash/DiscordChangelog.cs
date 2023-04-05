@@ -41,9 +41,13 @@ namespace XaiSharp.Commands.Slash
                 {
                     Title = "Changelog for " + changelogDate,
                     Description = RemoveDiscordFormatting(changelog.Content),
-                    ImageUrl = changelog.Asset,
                     Color = Colors.Random()
                 };
+
+                if (changelog.Asset.StartsWith("http"))
+                {
+                    changelogEmbed.ImageUrl = changelog.Asset;
+                }
 
                 await RespondAsync(embed: changelogEmbed.Build());
             }
@@ -66,9 +70,13 @@ namespace XaiSharp.Commands.Slash
                 {
                     Title = "Changelog for " + changelogDate,
                     Description = RemoveDiscordFormatting(changelog.Content),
-                    ImageUrl = changelog.Asset,
                     Color = Colors.Random()
                 };
+
+                if (changelog.Asset.StartsWith("http"))
+                {
+                    changelogEmbed.ImageUrl = changelog.Asset;
+                }
 
                 await RespondAsync(embed: changelogEmbed.Build());
             }
