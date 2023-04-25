@@ -22,7 +22,7 @@ namespace XaiSharp.Commands.Slash
             var quote = random.Next(0, quotes.Length);
 
             var quoteEmbed = new EmbedBuilder()
-                .WithColor((uint)Math.Floor(random.NextDouble() * (0xffffff + 1)))
+                .WithColor(Convert.ToUInt32(Util.CreateMD5Hash(quotes[quote].Text)[..6], 16))
                 .WithAuthor(quotes[quote].Author)
                 .WithDescription(quotes[quote].Text.Replace("\\n", "\n"))
                 .WithImageUrl(quotes[quote].Image)
