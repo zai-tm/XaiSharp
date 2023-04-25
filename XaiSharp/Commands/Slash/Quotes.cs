@@ -31,7 +31,7 @@ namespace XaiSharp.Commands.Slash
                     .WithAuthor(quotes[quote].Author)
                     .WithDescription(quotes[quote].Text.Replace("\\n", "\n"))
                     .WithImageUrl(quotes[quote].Image)
-                    .WithFooter("Inspirational quotes provided by the Progressbar95 community")
+                    .WithFooter($"ID: {quote+1} | Inspirational quotes provided by the Progressbar95 community")
                     .WithCurrentTimestamp();
                 await RespondAsync(embed: quoteEmbed.Build());
             }
@@ -39,17 +39,27 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("search", "choose a quote")]
             public async Task HandleSearch(int id)
             {
-                List<Quote> quotesList = JsonConvert.DeserializeObject<List<Quote>>(File.ReadAllText("JSON/quotes.json"));
-                var quotes = quotesList.ToArray();
+                try
+                {
+                    List<Quote> quotesList = JsonConvert.DeserializeObject<List<Quote>>(File.ReadAllText("JSON/quotes.json"));
+                    var quotes = quotesList.ToArray();
 
-                var quoteEmbed = new EmbedBuilder()
-                    .WithColor(Convert.ToUInt32(Util.CreateMD5Hash(quotes[id-1].Text)[..6], 16))
-                    .WithAuthor(quotes[id - 1].Author)
-                    .WithDescription(quotes[id - 1].Text.Replace("\\n", "\n"))
-                    .WithImageUrl(quotes[id - 1].Image)
-                    .WithFooter("Inspirational quotes provided by the Progressbar95 community")
-                    .WithCurrentTimestamp();
-                await RespondAsync(embed: quoteEmbed.Build());
+                    var quoteEmbed = new EmbedBuilder()
+                        .WithColor(Convert.ToUInt32(Util.CreateMD5Hash(quotes[id - 1].Text)[..6], 16))
+                        .WithAuthor(quotes[id - 1].Author)
+                        .WithDescription(quotes[id - 1].Text.Replace("\\n", "\n"))
+                        .WithImageUrl(quotes[id - 1].Image)
+                        .WithFooter($"ID: {id} | Inspirational quotes provided by the Progressbar95 community")
+                        .WithCurrentTimestamp();
+                    await RespondAsync(embed: quoteEmbed.Build());
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    var errorEmbed = new EmbedBuilder()
+                        .WithColor(Colors.Error)
+                        .WithDescription("❌ There is no quote with that ID");
+                    await RespondAsync(embed: errorEmbed.Build(), ephemeral:true);
+                }
             }
         }
     }
