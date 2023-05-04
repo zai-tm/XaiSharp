@@ -59,8 +59,6 @@ namespace XaiSharp.Commands.Slash
                 }
 
                 await RespondAsync(embed: countdownEmbed.Build());
-
-            }
             }
             catch (Exception e)
             {
