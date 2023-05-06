@@ -15,11 +15,14 @@ namespace XaiSharp.Commands.Slash
             public DateTimeOffset Date { get; set; }
         }
 
-        HttpClient client = new();
+        HttpClientHandler clientHandler = new HttpClientHandler { 
+            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; }
+        };
 
         [SlashCommand("countdown", "Countdown until an event")]
         public async Task Handle()
         {
+        HttpClient client = new(clientHandler);
             try
             {
                 string url = "https://pb95discord.com/event.json";
