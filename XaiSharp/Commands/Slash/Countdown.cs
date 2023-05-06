@@ -15,17 +15,14 @@ namespace XaiSharp.Commands.Slash
             public DateTimeOffset Date { get; set; }
         }
 
-        HttpClientHandler clientHandler = new HttpClientHandler { 
-            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; }
-        };
+        HttpClient client = new();
 
         [SlashCommand("countdown", "Countdown until an event")]
         public async Task Handle()
         {
-        HttpClient client = new(clientHandler);
             try
             {
-                string url = "https://pb95discord.com/event.json";
+                string url = "http://pb95discord.com/event.json";
                 string result = await client.GetStringAsync(url);
                 Event nextEvent = JsonConvert.DeserializeObject<Event>(result);
 
