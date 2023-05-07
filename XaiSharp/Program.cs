@@ -100,6 +100,43 @@ namespace XaiSharp
 
         public async Task HandleReactionAdded(Cacheable<IUserMessage, ulong> msg, Cacheable<IMessageChannel, ulong> chan, SocketReaction react)
         {
+            List<ulong> bannedChannelIds = new List<ulong>()
+                            {
+                                1022207551531659335,
+                                990334292683026432,
+                                990334296801820692,
+                                990334300232765510,
+                                990334302728355900,
+                                990334305169457214,
+                                990334306754895932,
+                                990334309162430534,
+                                1019642793079099495,
+                                1019634553779925082,
+                                990334299037372477,
+                                990334312803106876,
+                                990334314199801896,
+                                997195885165428816,
+                                990334307870593084,
+                                990334334768652288,
+                                990334344730120242,
+                                990334348865732608,
+                                990334350065291334,
+                                990334351214526525,
+                                1027902246941380618,
+                                994712600220794900,
+                                990334352888041502,
+                                1035630182289133568,
+                                990334318427668500,
+                                990334310370394252,
+                                1019982537860325498,
+                                1021139297916690617,
+                                990334311435747378,
+                                990334329861337139,
+                                990334319753044018,
+                                990334291651207180,
+                                990334290170609758,
+                                990334295195414569
+                            };
             try
             {
                 switch (react.Emote)
@@ -197,44 +234,6 @@ namespace XaiSharp
                                 return;
                             }
 
-                            List<ulong> bannedChannelIds = new List<ulong>()
-                            {
-                                1022207551531659335,
-                                990334292683026432,
-                                990334296801820692,
-                                990334300232765510,
-                                990334302728355900,
-                                990334305169457214,
-                                990334306754895932,
-                                990334309162430534,
-                                1019642793079099495,
-                                1019634553779925082,
-                                990334299037372477,
-                                990334312803106876,
-                                990334314199801896,
-                                997195885165428816,
-                                990334307870593084,
-                                990334334768652288,
-                                990334344730120242,
-                                990334348865732608,
-                                990334350065291334,
-                                990334351214526525,
-                                1027902246941380618,
-                                994712600220794900,
-                                990334352888041502,
-                                1035630182289133568,
-                                990334318427668500,
-                                990334310370394252,
-                                1019982537860325498,
-                                1021139297916690617,
-                                990334311435747378,
-                                990334329861337139,
-                                990334319753044018,
-                                990334291651207180,
-                                990334290170609758,
-                                990334295195414569
-                            };
-
                             if (bannedChannelIds.Contains(message.Channel.Id)) return;
                             if (message.IsPinned) return;
 
@@ -250,6 +249,36 @@ namespace XaiSharp
                             }
                             await webhook.SendMessageAsync(null, false, new[] { BadMessageEmbed.Build() }, "really bad message");
                             await message.DeleteAsync();
+                        }
+                        break;
+                    case var _ when react.Emote.Equals(new Emoji("⬆️")):
+                        {
+                            var message = await msg.GetOrDownloadAsync();
+                            var emotes = await message.GetReactionUsersAsync(new Emoji("⬆️"), 1000).FlattenAsync();
+                            if (bannedChannelIds.Contains(message.Channel.Id)) return;
+                            if (message.IsPinned) return;
+
+                            foreach (var emote in emotes)
+                            {
+                                if (emote.Id == message.Author.Id)
+                                {
+
+                                    DiscordWebhookClient webhook = new(_config.WebhookId, _config.WebhookToken);
+
+                                    var BadMessageEmbed = new EmbedBuilder()
+                                        .WithAuthor(message.Author.Username, message.Author.GetAvatarUrl())
+                                        .WithDescription(message.Content)
+                                        .WithFooter("laugh at this user!! they tried to upvote their own message")
+                                        .WithTimestamp(message.Timestamp);
+                                    if (message.Attachments.Count != 0)
+                                    {
+                                        BadMessageEmbed.ImageUrl = message.Attachments.FirstOrDefault().Url;
+                                    }
+                                    await webhook.SendMessageAsync(null, false, new[] { BadMessageEmbed.Build() }, "really bad message");
+                                    await message.DeleteAsync();
+                                }
+                            }
+                            
                         }
                         break;
                     default:
