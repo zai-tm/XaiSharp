@@ -37,7 +37,8 @@
         "fell too far and was finished by",
         "was stung to death by",
         "went off with a bang whilst fighting",
-        "was obliterated by a sonically-charged shriek whilst trying to escape"
+        "was obliterated by a sonically-charged shriek whilst trying to escape",
+        "left the confines of this world whilst fighting"
       ]
     },
     {
@@ -79,7 +80,9 @@
         "was roasted in dragon breath",
         "was doomed to fall",
         "was killed by even more magic",
-        "was obliterated by a sonically-charged shriek"
+        "was obliterated by a sonically-charged shriek",
+        "left the confines of this world",
+        "was killed"
       ]
     }
 ]
