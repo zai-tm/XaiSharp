@@ -304,7 +304,7 @@ namespace XaiSharp.Commands.Slash
                             int amount = random.Next(1, 16);
                             SQLiteCommand updateCmd = new($"update Dolla set Dolla={dolla+amount}, LastFreeDolla={DateTimeOffset.UtcNow.ToUnixTimeSeconds()} where UserId={Context.User.Id}", conn);
                             updateCmd.ExecuteNonQuery();
-                            await RespondAsync($"You have claimed your free dolla. You now have **Đ{dolla+ amount}**.", ephemeral: true);
+                            await RespondAsync($"You have claimed your free dolla. You now have **Đ{dolla+ amount}**.");
                         }
 
                     }
