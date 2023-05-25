@@ -19,7 +19,7 @@ namespace XaiSharp.Commands.Slash
                 ulong[] admins =
                 {
                     363853381061574658,
-                    52635605956506421
+                    526356059565064216
                 };
 
                 //Console.WriteLine(Context.User.Id);
