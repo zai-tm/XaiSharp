@@ -259,6 +259,7 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("claim", "Claim your free dolla every 24 hours")]
             public async Task HandleClaim()
             {
+                Random random = new();
                 string dbPath = @"URI=file:" + config.SQLiteDatabase;
                 using var conn = new SQLiteConnection(dbPath);
                 try
@@ -268,9 +269,10 @@ namespace XaiSharp.Commands.Slash
                     object scal = cmd.ExecuteScalar();
                     if (scal != null && Convert.ToInt32(scal) == 0)
                     {
-                        SQLiteCommand insertCmd = new($"insert into dolla (UserId, Dolla, LastFreeDolla) values ({Context.User.Id}, 1, {DateTimeOffset.UtcNow.ToUnixTimeSeconds()})", conn);
+                        int amount = random.Next(1, 16);
+                        SQLiteCommand insertCmd = new($"insert into dolla (UserId, Dolla, LastFreeDolla) values ({Context.User.Id}, {amount}, {DateTimeOffset.UtcNow.ToUnixTimeSeconds()})", conn);
                         insertCmd.ExecuteNonQuery();
-                        await RespondAsync($"Claimed your free dolla. You now have **Đ1**.");
+                        await RespondAsync($"Claimed your free dolla. You now have **Đ{amount}**.");
                     } else
                     {
                         //get amount of dolla and last 
@@ -299,9 +301,10 @@ namespace XaiSharp.Commands.Slash
                             await RespondAsync($"You already claimed your free dolla within the last 24 hours. Wait {difference.Hours} hours, {difference.Minutes} minutes, and {difference.Seconds} seconds. ", ephemeral:true);
                         } else
                         {
-                            SQLiteCommand updateCmd = new($"update Dolla set Dolla={dolla+1}, LastFreeDolla={DateTimeOffset.UtcNow.ToUnixTimeSeconds()} where UserId={Context.User.Id}", conn);
+                            int amount = random.Next(1, 16);
+                            SQLiteCommand updateCmd = new($"update Dolla set Dolla={dolla+amount}, LastFreeDolla={DateTimeOffset.UtcNow.ToUnixTimeSeconds()} where UserId={Context.User.Id}", conn);
                             updateCmd.ExecuteNonQuery();
-                            await RespondAsync($"You have claimed your free dolla. You now have **Đ{dolla+1}**.", ephemeral: true);
+                            await RespondAsync($"You have claimed your free dolla. You now have **Đ{dolla+ amount}**.", ephemeral: true);
                         }
 
                     }
