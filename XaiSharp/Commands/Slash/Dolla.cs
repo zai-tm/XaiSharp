@@ -290,15 +290,15 @@ namespace XaiSharp.Commands.Slash
                         }
                         rdr.Close();
 
-                        // did they already claim in the last 24 hours?
+                        // did they already claim in the last 12 hours?
                         DateTimeOffset now = DateTimeOffset.Now;
-                        DateTimeOffset yesterday = now.AddHours(-24);
+                        DateTimeOffset yesterday = now.AddHours(-12);
                        // DateTimeOffset tomorrow = now.AddHours(24);
-                        TimeSpan difference = lastFreeDolla.AddHours(24) - now;
+                        TimeSpan difference = lastFreeDolla.AddHours(12) - now;
 
                         if (lastFreeDolla > yesterday && lastFreeDolla <= now)
                         {
-                            await RespondAsync($"You already claimed your free dolla within the last 24 hours. Wait {difference.Hours} hours, {difference.Minutes} minutes, and {difference.Seconds} seconds. ", ephemeral:true);
+                            await RespondAsync($"You already claimed your free dolla within the last 12 hours. Wait {difference.Hours} hours, {difference.Minutes} minutes, and {difference.Seconds} seconds. ", ephemeral:true);
                         } else
                         {
                             int amount = random.Next(1, 16);
