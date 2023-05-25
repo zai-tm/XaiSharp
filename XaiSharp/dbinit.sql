@@ -11,6 +11,12 @@ CREATE TABLE [RepostedMessages] (
     [MessageId] UNSIGNED BIG INT NOT NULL
 );
 
+CREATE TABLE [Dolla] (
+    [UserId] UNSIGNED BIG INT NOT NULL,
+    [Dolla] INTEGER NOT NULL,
+    [LastFreeDolla] TIMESTAMP NOT NULL
+);
+
 CREATE TABLE [Ranks] (
     [UserId] UNSIGNED BIG INT NOT NULL,
     [Rank] INT NOT NULL
