@@ -173,6 +173,11 @@ namespace XaiSharp.Commands.Slash
                         object dollaScal = getDollaCmd.ExecuteScalar();
                         if (dollaScal != null && Convert.ToInt32(dollaScal) > 0)
                         {
+                            if (Convert.ToInt32(dollaScal) < amount)
+                            {
+                                await RespondAsync("Why", ephemeral: true);
+                                return;
+                            }
                             int senderDolla = Convert.ToInt32(dollaScal);
                             Console.WriteLine("Congrats. you ain't in debt");
                             //Check if reciever is in database
