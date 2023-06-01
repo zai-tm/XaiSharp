@@ -87,6 +87,11 @@ namespace XaiSharp.Commands.Slash
                 string dbPath = @"URI=file:" + config.SQLiteDatabase;
                 using var conn = new SQLiteConnection(dbPath);
                 int pageFinal = page - 1 ?? 0;
+                if (pageFinal < 0)
+                {
+                    await RespondAsync("there is no negative leaderboard page", ephemeral: true);
+                    return;
+                }
                 try
                 {
                     conn.Open();
@@ -261,7 +266,7 @@ namespace XaiSharp.Commands.Slash
                     Console.WriteLine(ex);
                 }
             }
-            [SlashCommand("claim", "Claim your free dolla every 24 hours")]
+            [SlashCommand("claim", "Claim your free dolla every 12 hours")]
             public async Task HandleClaim()
             {
                 Random random = new();
