@@ -66,7 +66,6 @@ namespace XaiSharp.Commands.Slash
                     },
                     Description = Context.Guild.Description ?? "",
                     ThumbnailUrl = Context.Guild.IconUrl,
-                    ImageUrl = Context.Guild.BannerUrl,
                     Footer = new EmbedFooterBuilder
                     {
                         Text = $"ID: {Context.Guild.Id}"
@@ -92,6 +91,12 @@ namespace XaiSharp.Commands.Slash
                     {
                         new EmbedFieldBuilder
                         {
+                            Name = "Display Name",
+                            Value = user.DisplayName,
+                            IsInline = false
+                        },
+                        new EmbedFieldBuilder
+                        {
                             Name = "Joined",
                             Value = $"<t:{ToUnixTime(user.JoinedAt)}:f> (<t:{ToUnixTime(user.JoinedAt)}:R>)",
                             IsInline = true,
@@ -106,7 +111,9 @@ namespace XaiSharp.Commands.Slash
                     Footer = new EmbedFooterBuilder
                     {
                         Text = $"ID: {user.Id}"
-                    }
+                    },
+                    ThumbnailUrl = user.GetAvatarUrl(),
+
                 };
 
                 StringBuilder roles = new();
@@ -118,6 +125,16 @@ namespace XaiSharp.Commands.Slash
                     roles.Append($"{Context.Guild.GetRole(roleId).Mention}, ");
                 }
                 roles.Remove(roles.Length - 2, 2);
+
+                //pomelo
+                if (user.Discriminator == "0000")
+                {
+                    userEmbed.Author = new EmbedAuthorBuilder
+                    {
+                        Name = $"{user.Username}",
+                        IconUrl = user.GetAvatarUrl()
+                    };
+                }
 
                 userEmbed.AddField($"Roles ({user.RoleIds.Count-1})", roles, false);
                 await RespondAsync(embed: userEmbed.Build(), ephemeral: true);
