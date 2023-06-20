@@ -3,6 +3,7 @@ using Discord;
 using System.Data.SQLite;
 using System.Xml.Linq;
 using System.Reactive;
+using System.Xml.Serialization;
 
 namespace XaiSharp.Commands.Slash
 {
@@ -114,7 +115,7 @@ namespace XaiSharp.Commands.Slash
                     string message = string.Empty;
                     for (int i = 0; i < Math.Min(10, list.Count); i++)
                     {
-                        message += $"**#{i + 1 + (pageFinal * 10)}** | `{list.ElementAt(i).Key.Username}#{list.ElementAt(i).Key.Discriminator}` | **Đ{list.ElementAt(i).Value}**\n";
+                        message += $"**#{i + 1 + (pageFinal * 10)}** | {list.ElementAt(i).Key.DisplayName} (`{list.ElementAt(i).Key.Username}`)| **Đ{list.ElementAt(i).Value}**\n";
                     }
                     EmbedBuilder leaderboardEmbed = new EmbedBuilder
                     {
@@ -193,7 +194,7 @@ namespace XaiSharp.Commands.Slash
                             {
                                 SQLiteCommand insertCmd = new($"insert into dolla (UserId, Dolla, LastFreeDolla) values ({user.Id}, {amount}, 0)", conn);
                                 insertCmd.ExecuteNonQuery();
-                                await RespondAsync($"Successfully transferred Đ{amount} to {user.Username}");
+                                await RespondAsync($"Successfully transferred Đ{amount} to {user.DisplayName}");
                                 SQLiteCommand updateSenderCmd = new($"update Dolla set Dolla={senderDolla - amount} where UserId={Context.User.Id}", conn);
                                 updateSenderCmd.ExecuteNonQuery();
 
@@ -215,7 +216,7 @@ namespace XaiSharp.Commands.Slash
 
                                     SQLiteCommand updateRecieverCmd = new($"update Dolla set Dolla={recieverDolla + amount} where UserId={user.Id}", conn);
                                     updateRecieverCmd.ExecuteNonQuery();
-                                    await RespondAsync($"Successfully transferred Đ{amount} to {user.Username}");
+                                    await RespondAsync($"Successfully transferred Đ{amount} to {user.DisplayName}");
                                 }
 
 
