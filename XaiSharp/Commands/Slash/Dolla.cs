@@ -104,7 +104,9 @@ namespace XaiSharp.Commands.Slash
                     {
                         while (rdr.Read())
                         {
-                            list.Add(Context.Guild.GetUser((ulong)rdr.GetInt64(0)), rdr.GetInt32(1));
+                            var user = Context.Guild.GetUser((ulong)rdr.GetInt64(0));
+                            if (user == null) continue;
+                            list.Add(user, rdr.GetInt32(1));
                         }
                     } else
                     {
@@ -115,7 +117,7 @@ namespace XaiSharp.Commands.Slash
                     string message = string.Empty;
                     for (int i = 0; i < Math.Min(10, list.Count); i++)
                     {
-                        message += $"**#{i + 1 + (pageFinal * 10)}** | {list.ElementAt(i).Key.DisplayName} (`{list.ElementAt(i).Key.Username}`)| **Đ{list.ElementAt(i).Value}**\n";
+                        message += $"**#{i + 1 + (pageFinal * 10)}** | `{list.ElementAt(i).Key.Username}` | **Đ{list.ElementAt(i).Value}**\n";
                     }
                     EmbedBuilder leaderboardEmbed = new EmbedBuilder
                     {
