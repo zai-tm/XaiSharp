@@ -4,8 +4,6 @@ Token: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQr 
 WebhookId: 123456789012345678 # ID of the webhook, for suggestion commands
 WebhookToken: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQr # Webhook token
 SQLiteDatabase: /path/to/db.sqlite
-Repository: "zai-tm/XaiSharp" # Github repository name
-GithubToken: ghp_AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIj # GitHub token
 ActivityType: Playing # Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING|CUSTOM (Not case sensitive)
 Activity: Anything you want! # It's true
 TumblrReposter: true
