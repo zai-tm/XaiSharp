@@ -22,8 +22,6 @@ namespace XaiSharp
         public ulong WebhookId { get; set; }
         public string WebhookToken { get; set; }
         public string SQLiteDatabase { get; set; }
-        public string Repository { get; set; }
-        public string GithubToken { get; set; }
         public string ActivityType { get; set; }
         public string Activity { get; set; }
         public bool TumblrReposter { get; set; }

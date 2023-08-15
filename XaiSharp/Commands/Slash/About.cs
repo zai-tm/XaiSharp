@@ -20,27 +20,17 @@ namespace XaiSharp.Commands.Slash
                 Title = "XaiSharp"
             };
 
-            string url = $"https://api.github.com/repos/{config.Repository}/commits?per_page=1";
-            string[] GithubDetails = config.Repository.Split('/');
-
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {config.GithubToken}");
-                    client.DefaultRequestHeaders.UserAgent.Add(new(GithubDetails[1], null));
-                    client.DefaultRequestHeaders.UserAgent.Add(new($"(+https://github.com/{config.Repository})"));
-                    var response = client.GetAsync(url).Result;
-                    var json = response.Content.ReadAsStringAsync().Result;
-                    //Console.WriteLine(json);
-                    dynamic commits = JsonConvert.DeserializeObject(json);
-                    string sha = commits[0].sha;
-                    //Console.WriteLine(commits[0].commit.author.date.ToString("yyyy-MM-dd HH_mm_ss"));
-                    aboutEmbed.Description = $"Version {commits[0].commit.author.date.ToString("yyyy-MM-dd HH_mm_ss")} \\(commit [`{sha[..7]}`]({commits[0].html_url})\\)";
-                    aboutEmbed.Color = Convert.ToUInt32(sha[..6], 16);
-                    await RespondAsync(embed: aboutEmbed.Build());
-                }
-            } catch (Exception e)
+                Console.WriteLine(ThisAssembly.Git.RepositoryUrl);
+                string sha = ThisAssembly.Git.Commit;
+                DateTimeOffset commitDate = DateTimeOffset.Parse(ThisAssembly.Git.CommitDate);
+                DateTime commitDateUtc = commitDate.ToUniversalTime().DateTime;
+                aboutEmbed.Description = $"Version {commitDateUtc.ToString("yyyy-MM-dd HH_mm_ss")} \\(commit [`{sha[..7]}`]({ThisAssembly.Git.RepositoryUrl}/commit/{sha})\\)";
+                aboutEmbed.Color = Convert.ToUInt32(sha[..6], 16);
+                await RespondAsync(embed: aboutEmbed.Build());
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
