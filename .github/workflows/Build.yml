@@ -27,6 +27,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: check folder
+      shell: bash
+      run: ls -a
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       if: always()
@@ -51,6 +54,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: check folder
+      shell: cmd
+      run: dir
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       if: always()
