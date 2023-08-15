@@ -15,7 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Setup Repository
+      uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -31,14 +32,15 @@ jobs:
       if: always()
       with: 
         name: Linux Executable
-        path: bin/
+        path: ZaiSharp/ZaiSharp/bin/
         retention-days: 30
   build-windows:
     name: Build Windows
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Setup Repository
+      uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -54,5 +56,5 @@ jobs:
       if: always()
       with: 
         name: Windows Executable
-        path: bin/
+        path: XaiSharp/XaiSharp/bin
         retention-days: 30
