@@ -27,15 +27,12 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: check folder
-      shell: bash
-      run: ls -a
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       if: always()
       with: 
         name: Linux Executable
-        path: ZaiSharp/ZaiSharp/bin/
+        path: XaiSharp/bin/
         retention-days: 30
   build-windows:
     name: Build Windows
@@ -54,13 +51,10 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: check folder
-      shell: cmd
-      run: dir
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       if: always()
       with: 
         name: Windows Executable
-        path: XaiSharp/XaiSharp/bin
+        path: XaiSharp/bin
         retention-days: 30
