@@ -89,10 +89,18 @@ namespace XaiSharp
                 "streaming" => ActivityType.Streaming,
                 "competing" => ActivityType.Competing,
                 "listening" => ActivityType.Listening,
-                _ => ActivityType.Playing,
+                "custom" => ActivityType.CustomStatus,
+                _ => ActivityType.CustomStatus,
             };
             
-            await _client.SetActivityAsync(new Game(_config.Activity, at, 0));
+            if (at == ActivityType.CustomStatus)
+            {
+                await _client.SetActivityAsync(new CustomStatusGame(_config.Activity));
+            }
+            else
+            {
+                await _client.SetActivityAsync(new Game(_config.Activity, at, 0));
+            }
 
             await Task.Delay(-1);
 

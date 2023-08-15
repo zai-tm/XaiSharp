@@ -6,7 +6,7 @@ WebhookToken: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKl
 SQLiteDatabase: /path/to/db.sqlite
 Repository: "zai-tm/XaiSharp" # Github repository name
 GithubToken: ghp_AbCdEfGhIjKlMnOpQrStUvWxYzAbCdEfGhIj # GitHub token
-ActivityType: Playing # Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING
+ActivityType: Playing # Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING|CUSTOM (Not case sensitive)
 Activity: Anything you want! # It's true
 TumblrReposter: true
 # Below is only needed if you have the Tumblr reposter enabled!
