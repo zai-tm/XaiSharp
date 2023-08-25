@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Xml.Linq;
 using System.Reactive;
 using System.Xml.Serialization;
+using Discord.Rest;
 
 namespace XaiSharp.Commands.Slash
 {
@@ -238,29 +239,41 @@ namespace XaiSharp.Commands.Slash
             }
 
             [SlashCommand("balance", "Check your balance")]
-            public async Task HandleBalance()
+            public async Task HandleBalance(IGuildUser? user = null)
             {
-
+                var finalUser = user ?? (Context.User as IGuildUser);
                 string dbPath = @"URI=file:" + config.SQLiteDatabase;
                 using var conn = new SQLiteConnection(dbPath);
                 try
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new($"select exists(select UserId from Dolla where UserId={Context.User.Id})", conn);
+                    SQLiteCommand cmd = new($"select exists(select UserId from Dolla where UserId={finalUser.Id})", conn);
                     object scal = cmd.ExecuteScalar();
                     if (scal != null && Convert.ToInt32(scal) == 0)
                     {
                         // they do not exist in the database, so they have 0 dolla
-                        await RespondAsync("You have **Đ0**.", ephemeral: true);
+                        if (finalUser == Context.User)
+                        {
+                            await RespondAsync("You have **Đ0**.", ephemeral: true);
+                        } else
+                        {
+                            await RespondAsync($"{finalUser.DisplayName} has **Đ0**.", ephemeral: true);
+                        }
                     } else
                     {
-                        SQLiteCommand dollaCmd = new($"select dolla from Dolla where UserId={Context.User.Id}", conn);
+                        SQLiteCommand dollaCmd = new($"select dolla from Dolla where UserId={finalUser.Id}", conn);
                         object dollaScal = dollaCmd.ExecuteScalar();
                         int dolla = Convert.ToInt32(dollaScal);
                         if (scal != null)
                         {
-                            await RespondAsync($"You have **Đ{dolla}**.", ephemeral: true);
-
+                            if (finalUser == Context.User)
+                            {
+                                await RespondAsync($"You have **Đ{dolla}**.", ephemeral: true);
+                            }
+                            else
+                            {
+                                await RespondAsync($"{finalUser.DisplayName} has **Đ{dolla}**.", ephemeral: true);
+                            }
                         }
                     }
                 }
@@ -285,7 +298,7 @@ namespace XaiSharp.Commands.Slash
                         int amount = random.Next(1, 16);
                         SQLiteCommand insertCmd = new($"insert into dolla (UserId, Dolla, LastFreeDolla) values ({Context.User.Id}, {amount}, {DateTimeOffset.UtcNow.ToUnixTimeSeconds()})", conn);
                         insertCmd.ExecuteNonQuery();
-                        await RespondAsync($"Claimed your free dolla. You now have **Đ{amount}**.");
+                        await RespondAsync($"You have claimed your free dolla. You now have **Đ{amount}**. (0 + {amount})");
                     } else
                     {
                         //get amount of dolla and last 
@@ -317,7 +330,7 @@ namespace XaiSharp.Commands.Slash
                             int amount = random.Next(1, 16);
                             SQLiteCommand updateCmd = new($"update Dolla set Dolla={dolla+amount}, LastFreeDolla={DateTimeOffset.UtcNow.ToUnixTimeSeconds()} where UserId={Context.User.Id}", conn);
                             updateCmd.ExecuteNonQuery();
-                            await RespondAsync($"You have claimed your free dolla. You now have **Đ{dolla+ amount}**.");
+                            await RespondAsync($"You have claimed your free dolla. You now have **Đ{dolla+ amount}**. ({dolla} + {amount})");
                         }
 
                     }
