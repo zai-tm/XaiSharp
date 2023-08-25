@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.Rest;
 using System.Text;
 using System.Diagnostics;
 using static XaiSharp.Util;
@@ -66,6 +67,7 @@ namespace XaiSharp.Commands.Slash
                     },
                     Description = Context.Guild.Description ?? "",
                     ThumbnailUrl = Context.Guild.IconUrl,
+                    ImageUrl = Context.Guild.BannerUrl,
                     Footer = new EmbedFooterBuilder
                     {
                         Text = $"ID: {Context.Guild.Id}"
@@ -79,6 +81,7 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("user", "View info about a user")]
             public async Task HandleUser(IGuildUser user)
             {
+                var restUser = await Context.Client.Rest.GetUserAsync(user.Id);
                 EmbedBuilder userEmbed = new()
                 {
                     Author = new EmbedAuthorBuilder
@@ -113,6 +116,7 @@ namespace XaiSharp.Commands.Slash
                         Text = $"ID: {user.Id}"
                     },
                     ThumbnailUrl = user.GetAvatarUrl(),
+                    ImageUrl = restUser.GetBannerUrl()
 
                 };
 
