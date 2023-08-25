@@ -217,11 +217,11 @@ namespace XaiSharp
                                         imageBinaries.Add(new(imageBytes));
                                     }
                                 }
-                                await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, $"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
+                                await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreatePhoto(imageBinaries, $"<h1>Message from {message.Author.Username}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
                             }
                             else
                             {
-                                await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText($"<h1>Message from {message.Author.Username}#{message.Author.Discriminator}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
+                                await tumblr.CreatePostAsync(_config.TumblrBlog, PostData.CreateText($"<h1>Message from {message.Author.Username}</h1><br><p>{Markdig.Markdown.ToHtml(message.Content)}</p>"));
                             }
                             Console.WriteLine("Posted message " + message.Id + ", content:\n" + message.Content);
                         }
