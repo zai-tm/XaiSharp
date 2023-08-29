@@ -98,7 +98,7 @@ namespace XaiSharp.Commands.Slash
                         new EmbedFieldBuilder
                         {
                             Name = "Display Name",
-                            Value = restUser.GlobalName,
+                            Value = restUser.GlobalName ?? user.Username,
                             IsInline = false
                         },
                         new EmbedFieldBuilder
