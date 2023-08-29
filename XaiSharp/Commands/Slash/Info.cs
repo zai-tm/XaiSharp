@@ -19,6 +19,7 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("server", "View info about the current server")]
             public async Task HandleServer()
             {
+                try { 
                 var iconRegex = @"\.jpg";
                 EmbedBuilder serverEmbed = new()
                 {
@@ -68,8 +69,8 @@ namespace XaiSharp.Commands.Slash
                         }
                     },
                     Description = Context.Guild.Description ?? "",
-                    ThumbnailUrl = Regex.Replace(Context.Guild.IconUrl, iconRegex, @".png") + "?size=4096",
-                    ImageUrl = Context.Guild.BannerUrl + "?size=4096",
+                    ThumbnailUrl = Regex.Replace(Context.Guild.IconUrl ?? "", iconRegex, @".png") + (Context.Guild.IconUrl != null ? "?size=4096" : ""),
+                    ImageUrl = (Context.Guild.BannerUrl != null ? "?size=4096" : ""),
                     Footer = new EmbedFooterBuilder
                     {
                         Text = $"ID: {Context.Guild.Id}"
@@ -77,6 +78,7 @@ namespace XaiSharp.Commands.Slash
                     Timestamp = Context.Guild.CreatedAt
                 };
                 await RespondAsync(embed: serverEmbed.Build(), ephemeral: true);
+                    } catch (Exception e) { Console.WriteLine(e); }
             }
 
             [EnabledInDm(false)]
@@ -98,7 +100,7 @@ namespace XaiSharp.Commands.Slash
                         new EmbedFieldBuilder
                         {
                             Name = "Display Name",
-                            Value = user.GlobalName,
+                            Value = user.GlobalName ?? user.Nickname,
                             IsInline = false
                         },
                         new EmbedFieldBuilder
