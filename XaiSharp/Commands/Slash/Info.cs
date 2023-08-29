@@ -2,6 +2,7 @@
 using Discord.Interactions;
 using Discord.Rest;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 using static XaiSharp.Util;
 
@@ -18,6 +19,7 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("server", "View info about the current server")]
             public async Task HandleServer()
             {
+                var iconRegex = @"\.jpg";
                 EmbedBuilder serverEmbed = new()
                 {
                     Author = new EmbedAuthorBuilder
@@ -66,8 +68,8 @@ namespace XaiSharp.Commands.Slash
                         }
                     },
                     Description = Context.Guild.Description ?? "",
-                    ThumbnailUrl = Context.Guild.IconUrl,
-                    ImageUrl = Context.Guild.BannerUrl,
+                    ThumbnailUrl = Regex.Replace(Context.Guild.IconUrl, iconRegex, @".png") + "?size=4096",
+                    ImageUrl = Context.Guild.BannerUrl + "?size=4096",
                     Footer = new EmbedFooterBuilder
                     {
                         Text = $"ID: {Context.Guild.Id}"
@@ -81,6 +83,7 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("user", "View info about a user")]
             public async Task HandleUser(IGuildUser user)
             {
+                var sizeRegex = @"\?size=(?:128|256)";
                 var restUser = await Context.Client.Rest.GetUserAsync(user.Id);
                 EmbedBuilder userEmbed = new()
                 {
@@ -115,8 +118,8 @@ namespace XaiSharp.Commands.Slash
                     {
                         Text = $"ID: {user.Id}"
                     },
-                    ThumbnailUrl = user.GetAvatarUrl(),
-                    ImageUrl = restUser.GetBannerUrl()
+                    ThumbnailUrl = Regex.Replace(user.GetAvatarUrl(), sizeRegex, "?size=4096"),
+                    ImageUrl = Regex.Replace(restUser.GetBannerUrl() ?? "", sizeRegex, "?size=4096")
 
                 };
 
