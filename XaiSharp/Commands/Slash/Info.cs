@@ -27,7 +27,7 @@ namespace XaiSharp.Commands.Slash
                         Name = Context.Guild.Name,
                         IconUrl = Context.Guild.IconUrl
                     },
-                    Color = Colors.Random(),
+                    Color = Convert.ToUInt32(Util.CreateMD5Hash(Context.Guild.Id + "")[..6], 16),
                     Fields = new List<EmbedFieldBuilder>
                     {
                         new EmbedFieldBuilder
@@ -92,13 +92,13 @@ namespace XaiSharp.Commands.Slash
                         Name = $"{user.Username}#{user.Discriminator}",
                         IconUrl = user.GetAvatarUrl()
                     },
-                    Color = Colors.Random(),
+                    Color = restUser.AccentColor ?? Convert.ToUInt32(Util.CreateMD5Hash(user.Id + "")[..6], 16),
                     Fields = new List<EmbedFieldBuilder>
                     {
                         new EmbedFieldBuilder
                         {
                             Name = "Display Name",
-                            Value = restUser.GlobalName ?? user.Username,
+                            Value = user.GlobalName,
                             IsInline = false
                         },
                         new EmbedFieldBuilder
