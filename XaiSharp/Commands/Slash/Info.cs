@@ -70,7 +70,7 @@ namespace XaiSharp.Commands.Slash
                     },
                     Description = Context.Guild.Description ?? "",
                     ThumbnailUrl = Regex.Replace(Context.Guild.IconUrl ?? "", iconRegex, @".png") + (Context.Guild.IconUrl != null ? "?size=4096" : ""),
-                    ImageUrl = (Context.Guild.BannerUrl != null ? "?size=4096" : ""),
+                    ImageUrl = Context.Guild.BannerUrl+(Context.Guild.BannerUrl != null ? "?size=4096" : ""),
                     Footer = new EmbedFooterBuilder
                     {
                         Text = $"ID: {Context.Guild.Id}"
