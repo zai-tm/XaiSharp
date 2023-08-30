@@ -147,7 +147,7 @@ namespace XaiSharp.Commands.Slash
                         };
                     }
 
-                    if (roles.Length > 0) userEmbed.AddField($"Roles ({user.RoleIds.Count - 1})", roles ?? "None", false);
+                    if (roles.Length > 0) userEmbed.AddField($"Roles ({user.RoleIds.Count - 1})", roles ?? new StringBuilder("None"), false);
                     await RespondAsync(embed: userEmbed.Build(), ephemeral: true);
                 } catch (Exception ex) { Console.WriteLine(ex); }
             }
