@@ -152,7 +152,7 @@ namespace XaiSharp.Commands.Slash
                     await RespondAsync(embed: userEmbed.Build(), ephemeral: true);
                 } catch (Exception ex)
                 {
-                    await RespondAsync(ex.ToString(), ephemeral: true);
+                   Console.WriteLine(ex.ToString());
                 }
             }
         }
