@@ -133,7 +133,7 @@ namespace XaiSharp.Commands.Slash
                     if (roleId == Context.Guild.Id) continue;
                     roles.Append($"{Context.Guild.GetRole(roleId).Mention}, ");
                 }
-                roles.Remove(roles.Length - 2, 2);
+                if (roles.Length > 0) roles.Remove(roles.Length - 2, 2);
 
                 //pomelo
                 if (user.Discriminator == "0000")
