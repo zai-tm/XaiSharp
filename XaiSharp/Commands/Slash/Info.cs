@@ -85,17 +85,19 @@ namespace XaiSharp.Commands.Slash
             [SlashCommand("user", "View info about a user")]
             public async Task HandleUser(IGuildUser user)
             {
-                var sizeRegex = @"\?size=(?:128|256)";
-                var restUser = await Context.Client.Rest.GetUserAsync(user.Id);
-                EmbedBuilder userEmbed = new()
+                try
                 {
-                    Author = new EmbedAuthorBuilder
+                    var sizeRegex = @"\?size=(?:128|256)";
+                    var restUser = await Context.Client.Rest.GetUserAsync(user.Id);
+                    EmbedBuilder userEmbed = new()
                     {
-                        Name = $"{user.Username}#{user.Discriminator}",
-                        IconUrl = user.GetAvatarUrl()
-                    },
-                    Color = restUser.AccentColor ?? Convert.ToUInt32(Util.CreateMD5Hash(user.Id + "")[..6], 16),
-                    Fields = new List<EmbedFieldBuilder>
+                        Author = new EmbedAuthorBuilder
+                        {
+                            Name = $"{user.Username}#{user.Discriminator}",
+                            IconUrl = user.GetAvatarUrl()
+                        },
+                        Color = restUser.AccentColor ?? Convert.ToUInt32(Util.CreateMD5Hash(user.Id + "")[..6], 16),
+                        Fields = new List<EmbedFieldBuilder>
                     {
                         new EmbedFieldBuilder
                         {
@@ -116,37 +118,38 @@ namespace XaiSharp.Commands.Slash
                             IsInline = true
                         }
                     },
-                    Footer = new EmbedFooterBuilder
-                    {
-                        Text = $"ID: {user.Id}"
-                    },
-                    ThumbnailUrl = Regex.Replace(user.GetAvatarUrl(), sizeRegex, "?size=4096"),
-                    ImageUrl = Regex.Replace(restUser.GetBannerUrl() ?? "", sizeRegex, "?size=4096")
+                        Footer = new EmbedFooterBuilder
+                        {
+                            Text = $"ID: {user.Id}"
+                        },
+                        ThumbnailUrl = Regex.Replace(user.GetAvatarUrl(), sizeRegex, "?size=4096"),
+                        ImageUrl = Regex.Replace(restUser.GetBannerUrl() ?? "", sizeRegex, "?size=4096")
 
-                };
-
-                StringBuilder roles = new();
-
-                foreach (ulong roleId in user.RoleIds)
-                {
-                    //Console.WriteLine(Context.Guild.GetRole(roleId).Name);
-                    if (roleId == Context.Guild.Id) continue;
-                    roles.Append($"{Context.Guild.GetRole(roleId).Mention}, ");
-                }
-                if (roles.Length > 0) roles.Remove(roles.Length - 2, 2);
-
-                //pomelo
-                if (user.Discriminator == "0000")
-                {
-                    userEmbed.Author = new EmbedAuthorBuilder
-                    {
-                        Name = $"{user.Username}",
-                        IconUrl = user.GetAvatarUrl()
                     };
-                }
 
-                userEmbed.AddField($"Roles ({user.RoleIds.Count-1})", roles, false);
-                await RespondAsync(embed: userEmbed.Build(), ephemeral: true);
+                    StringBuilder roles = new();
+
+                    foreach (ulong roleId in user.RoleIds)
+                    {
+                        //Console.WriteLine(Context.Guild.GetRole(roleId).Name);
+                        if (roleId == Context.Guild.Id) continue;
+                        roles.Append($"{Context.Guild.GetRole(roleId).Mention}, ");
+                    }
+                    if (roles.Length > 0) roles.Remove(roles.Length - 2, 2);
+
+                    //pomelo
+                    if (user.Discriminator == "0000")
+                    {
+                        userEmbed.Author = new EmbedAuthorBuilder
+                        {
+                            Name = $"{user.Username}",
+                            IconUrl = user.GetAvatarUrl()
+                        };
+                    }
+
+                    if (roles.Length > 0) userEmbed.AddField($"Roles ({user.RoleIds.Count - 1})", roles ?? "None", false);
+                    await RespondAsync(embed: userEmbed.Build(), ephemeral: true);
+                } catch (Exception ex) { Console.WriteLine(ex); }
             }
         }
     }
