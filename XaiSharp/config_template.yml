@@ -4,6 +4,7 @@ Token: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQr 
 WebhookId: 123456789012345678 # ID of the webhook, for suggestion commands
 WebhookToken: AbCdEfGhIjKlMnOpQrStUvWxYz.AbCdEf.GhIjKlMnOpQrStUvWxYzAbCdEfGhIjKlMnOpQr # Webhook token
 SQLiteDatabase: /path/to/db.sqlite
+LogsChannel: 123456789012345678 # Channel to log moderation things in
 ActivityType: Playing # Can be PLAYING|WATCHING|STREAMING|COMPETING|LISTENING|CUSTOM (Not case sensitive)
 Activity: Anything you want! # It's true
 TumblrReposter: true
