@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using System.Net;
 namespace XaiSharp.Commands.Slash
 {
+    [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
+    [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
     public class XKCD : InteractionModuleBase<SocketInteractionContext>
     {
         [Group("xkcd", "The webcomic everyone knows and loves")]

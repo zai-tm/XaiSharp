@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 
 namespace XaiSharp.Commands.Slash
 {
+    [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
+    [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
     public class DiscordChangelog : InteractionModuleBase<SocketInteractionContext>
     {
         public class Changelog

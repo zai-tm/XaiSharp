@@ -15,7 +15,8 @@ namespace XaiSharp.Commands.Slash
         public class InfoGroup : InteractionModuleBase<SocketInteractionContext>
        
         {
-            [EnabledInDm(false)]
+            [IntegrationType(ApplicationIntegrationType.GuildInstall)]
+            [CommandContextType(InteractionContextType.Guild)]
             [SlashCommand("server", "View info about the current server")]
             public async Task HandleServer()
             {
@@ -81,7 +82,8 @@ namespace XaiSharp.Commands.Slash
                     } catch (Exception e) { Console.WriteLine(e); }
             }
 
-            [EnabledInDm(false)]
+            [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
+            [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
             [SlashCommand("user", "View info about a user")]
             public async Task HandleUser(IGuildUser user)
             {

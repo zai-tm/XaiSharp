@@ -1,7 +1,10 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 
 namespace XaiSharp.Commands.Slash
 {
+    [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
+    [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
     public class Crash : InteractionModuleBase<SocketInteractionContext>
     {
 

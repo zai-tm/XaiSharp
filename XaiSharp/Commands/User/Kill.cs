@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 
 namespace XaiSharp.Commands.User
 {
+    [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
+    [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
     public class Kill : InteractionModuleBase<SocketInteractionContext>
     {
         private class DeathMessage

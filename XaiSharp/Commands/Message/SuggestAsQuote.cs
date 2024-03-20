@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 
 namespace XaiSharp.Commands.Message
 {
+    [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
     public class SuggestAsQuote : InteractionModuleBase<SocketInteractionContext>
     {
         Config config = Util.ParseConfig(File.ReadAllText("config.yml"));

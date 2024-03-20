@@ -4,6 +4,8 @@ using System.Diagnostics;
 
 namespace XaiSharp.Commands.Slash
 {
+    [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
+    [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
     public class Ping : InteractionModuleBase<SocketInteractionContext>
     {
 
