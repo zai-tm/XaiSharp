@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 using System.Net;
 namespace XaiSharp.Commands.Slash
 {
-    [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
-    [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
     public class CtrlAltDel : InteractionModuleBase<SocketInteractionContext>
     {
+        [IntegrationType(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall)]
+        [CommandContextType(InteractionContextType.BotDm, InteractionContextType.PrivateChannel, InteractionContextType.Guild)]
         [Group("cad", "That other webcomic")]
         public class CtrlAltDelGroup : InteractionModuleBase<SocketInteractionContext>
         {
